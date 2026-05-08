@@ -1,691 +1,671 @@
-/**
- * IKIRA Fine Fragrance — Main JavaScript
- * ════════════════════════════════════════
- * Architecture:
- *  1. CURSOR MODULE         — Custom cursor + magnetic buttons
- *  2. HEADER MODULE         — Scroll glass effect + mobile menu
- *  3. CART MODULE           — State management, drawer UI
- *  4. FILTER MODULE         — Collection grid filtering
- *  5. FORM MODULE           — Contact form interactions
- *  6. GSAP ANIMATIONS       — All scroll & entrance animations
- */
+/* ============================================================
+   LUMIÈRE — script.js
+   Architecture:
+   1. GSAP / ScrollTrigger Animation Module
+   2. Custom Cursor Module
+   3. Cart & UI State Module
+   4. Filter / Collection Module
+   5. Utility Functions
+   ============================================================ */
 
 'use strict';
 
-/* ═══════════════════════════════════════════════════════════
-   1. CURSOR MODULE
-═══════════════════════════════════════════════════════════ */
-const CursorModule = (() => {
-  const dot  = document.getElementById('cursorDot');
-  const ring = document.getElementById('cursorRing');
-  if (!dot || !ring) return;
-
-  let mouseX = 0, mouseY = 0;
-  let ringX  = 0, ringY  = 0;
-  let rafId;
-
-  // Move dot instantly
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    dot.style.left = mouseX + 'px';
-    dot.style.top  = mouseY + 'px';
-  });
-
-  // Animate ring with lag
-  function animateRing() {
-    ringX += (mouseX - ringX) * 0.12;
-    ringY += (mouseY - ringY) * 0.12;
-    ring.style.left = ringX + 'px';
-    ring.style.top  = ringY + 'px';
-    rafId = requestAnimationFrame(animateRing);
-  }
-  animateRing();
-
-  // Hover effect on interactive elements
-  const targets = 'a, button, .magnetic, .filter-btn, .product-card, .coll-card, input, textarea';
-  document.addEventListener('mouseover', (e) => {
-    if (e.target.closest(targets)) document.body.classList.add('cursor-hover');
-  });
-  document.addEventListener('mouseout', (e) => {
-    if (e.target.closest(targets)) document.body.classList.remove('cursor-hover');
-  });
-})();
-
-/* ═══════════════════════════════════════════════════════════
-   2. HEADER MODULE
-═══════════════════════════════════════════════════════════ */
-const HeaderModule = (() => {
-  const header        = document.getElementById('header');
-  const mobileBtn     = document.getElementById('mobileMenuBtn');
-  const mobileNav     = document.getElementById('mobileNav');
-
-  // Glassmorphic scroll effect
-  window.addEventListener('scroll', () => {
-    header.classList.toggle('scrolled', window.scrollY > 40);
-  }, { passive: true });
-
-  // Mobile menu toggle
-  let menuOpen = false;
-  mobileBtn?.addEventListener('click', () => {
-    menuOpen = !menuOpen;
-    mobileNav.classList.toggle('open', menuOpen);
-    const spans = mobileBtn.querySelectorAll('span');
-    if (menuOpen) {
-      spans[0].style.transform = 'translateY(6.5px) rotate(45deg)';
-      spans[1].style.transform = 'translateY(-6.5px) rotate(-45deg)';
-    } else {
-      spans[0].style.transform = '';
-      spans[1].style.transform = '';
-    }
-  });
-
-  // Close mobile nav on link click
-  document.querySelectorAll('.mobile-nav__link').forEach(link => {
-    link.addEventListener('click', () => {
-      menuOpen = false;
-      mobileNav.classList.remove('open');
-      const spans = mobileBtn.querySelectorAll('span');
-      spans[0].style.transform = '';
-      spans[1].style.transform = '';
-    });
-  });
-})();
-
-/* ═══════════════════════════════════════════════════════════
-   3. CART MODULE
-═══════════════════════════════════════════════════════════ */
-const CartModule = (() => {
-  // ── State ──
-  let cartItems = [];
-
-  // ── DOM Refs ──
-  const cartDrawer  = document.getElementById('cartDrawer');
-  const cartOverlay = document.getElementById('cartOverlay');
-  const cartToggle  = document.getElementById('cartToggle');
-  const cartClose   = document.getElementById('cartClose');
-  const cartBadge   = document.getElementById('cartBadge');
-  const cartCount   = document.getElementById('cartCount');
-  const cartBody    = document.getElementById('cartBody');
-  const cartItemsEl = document.getElementById('cartItems');
-  const cartEmpty   = document.getElementById('cartEmpty');
-  const cartFooter  = document.getElementById('cartFooter');
-  const subtotalEl  = document.getElementById('cartSubtotal');
-
-  // ── Open / Close ──
-  function openCart() {
-    cartDrawer.classList.add('open');
-    cartOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    // Stagger cart items in
-    gsap.fromTo('.cart-item',
-      { x: 30, opacity: 0 },
-      { x: 0, opacity: 1, stagger: 0.08, duration: 0.45, ease: 'power3.out', delay: 0.25 }
-    );
-  }
-
-  function closeCart() {
-    cartDrawer.classList.remove('open');
-    cartOverlay.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  cartToggle?.addEventListener('click', openCart);
-  cartClose?.addEventListener('click', closeCart);
-  cartOverlay?.addEventListener('click', closeCart);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCart(); });
-
-  // ── Add to Cart ──
-  function addToCart(id, name, price) {
-    const existing = cartItems.find(i => i.id === id);
-    if (existing) {
-      existing.qty++;
-    } else {
-      cartItems.push({ id, name, price: parseFloat(price), qty: 1 });
-    }
-    renderCart();
-    updateBadge();
-    // Micro-animation on badge
-    gsap.fromTo(cartBadge, { scale: 1.6 }, { scale: 1, duration: 0.35, ease: 'back.out(2)' });
-    openCart();
-  }
-
-  // ── Update Quantity ──
-  function updateQty(id, delta) {
-    const item = cartItems.find(i => i.id === id);
-    if (!item) return;
-    item.qty += delta;
-    if (item.qty <= 0) {
-      cartItems = cartItems.filter(i => i.id !== id);
-    }
-    renderCart();
-    updateBadge();
-  }
-
-  // ── Remove Item ──
-  function removeItem(id) {
-    const el = cartItemsEl.querySelector(`[data-cart-id="${id}"]`);
-    if (el) {
-      gsap.to(el, {
-        x: 40, opacity: 0, height: 0, marginBottom: 0, paddingBottom: 0,
-        duration: 0.3, ease: 'power2.in',
-        onComplete: () => {
-          cartItems = cartItems.filter(i => i.id !== id);
-          renderCart();
-          updateBadge();
-        }
-      });
-    }
-  }
-
-  // ── Render Cart ──
-  function renderCart() {
-    if (cartItems.length === 0) {
-      cartEmpty.style.display = 'flex';
-      cartItemsEl.innerHTML = '';
-      cartFooter.style.display = 'none';
-      return;
-    }
-
-    cartEmpty.style.display = 'none';
-    cartFooter.style.display = 'block';
-
-    let total = 0;
-    cartItemsEl.innerHTML = cartItems.map(item => {
-      total += item.price * item.qty;
-      return `
-        <li class="cart-item" data-cart-id="${item.id}">
-          <div class="cart-item__img"></div>
-          <div class="cart-item__info">
-            <span class="cart-item__name">${item.name}</span>
-            <span class="cart-item__price">$${item.price}</span>
-            <div class="cart-item__qty">
-              <button class="qty-btn" onclick="CartModule.updateQty('${item.id}', -1)">−</button>
-              <span class="qty-num">${item.qty}</span>
-              <button class="qty-btn" onclick="CartModule.updateQty('${item.id}', 1)">+</button>
-            </div>
-          </div>
-          <button class="cart-item__remove" onclick="CartModule.removeItem('${item.id}')" aria-label="Remove">×</button>
-        </li>
-      `;
-    }).join('');
-
-    subtotalEl.textContent = `$${total.toFixed(2)}`;
-
-    // Re-animate newly rendered items
-    gsap.fromTo('.cart-item',
-      { x: 20, opacity: 0 },
-      { x: 0, opacity: 1, stagger: 0.07, duration: 0.4, ease: 'power3.out' }
-    );
-  }
-
-  // ── Update Badge ──
-  function updateBadge() {
-    const total = cartItems.reduce((sum, i) => sum + i.qty, 0);
-    cartBadge.textContent = total;
-    cartCount.textContent = `(${total})`;
-    cartBadge.classList.toggle('visible', total > 0);
-  }
-
-  // ── Delegate Cart Button Clicks ──
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-id][data-name][data-price]');
-    if (btn) {
-      const { id, name, price } = btn.dataset;
-      addToCart(id, name, price);
-    }
-  });
-
-  // Expose for inline handlers
-  return { updateQty, removeItem };
-})();
-
-// Expose CartModule globally for inline onclick handlers
-window.CartModule = CartModule;
-
-/* ═══════════════════════════════════════════════════════════
-   4. FILTER MODULE
-═══════════════════════════════════════════════════════════ */
-const FilterModule = (() => {
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const cards      = document.querySelectorAll('.coll-card');
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      // Update active state
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const filter = btn.dataset.filter;
-
-      cards.forEach(card => {
-        const cat = card.dataset.category;
-        const matches = filter === 'all' || cat === filter;
-
-        if (matches) {
-          // Show
-          card.style.display = '';
-          gsap.fromTo(card,
-            { opacity: 0, y: 20, scale: 0.94 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'power3.out', delay: Math.random() * 0.12 }
-          );
-        } else {
-          // Hide with animation
-          gsap.to(card, {
-            opacity: 0, scale: 0.88,
-            duration: 0.28, ease: 'power2.in',
-            onComplete: () => { card.style.display = 'none'; }
-          });
-        }
-      });
-    });
-  });
-})();
-
-/* ═══════════════════════════════════════════════════════════
-   5. FORM MODULE
-═══════════════════════════════════════════════════════════ */
-const FormModule = (() => {
-  const form = document.getElementById('contactForm');
-  if (!form) return;
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const btn = form.querySelector('.btn--submit');
-    const text = btn.querySelector('.btn-text');
-
-    // Success animation
-    gsap.timeline()
-      .to(btn, { scale: 0.96, duration: 0.1 })
-      .to(btn, { scale: 1, duration: 0.3, ease: 'back.out(3)' });
-
-    const original = text.textContent;
-    text.textContent = 'Sent ✓';
-    btn.style.background = 'var(--clr-sage)';
-
-    setTimeout(() => {
-      text.textContent = original;
-      btn.style.background = '';
-      form.reset();
-    }, 3000);
-  });
-})();
-
-/* ═══════════════════════════════════════════════════════════
-   6. GSAP ANIMATIONS MODULE
-═══════════════════════════════════════════════════════════ */
+/* ─────────────────────────────────────────────────────────────
+   1. GSAP ANIMATION MODULE
+   ───────────────────────────────────────────────────────────── */
 const AnimationModule = (() => {
-  // Register ScrollTrigger plugin
-  gsap.registerPlugin(ScrollTrigger);
 
-  /* ── Helper ── */
-  const ease = 'power3.out';
+  function init() {
+    gsap.registerPlugin(ScrollTrigger);
 
-  /* ── A) Hero Entrance ── */
-  function initHeroAnimations() {
+    initPageLoad();
+    initScrollAnimations();
+    initParallax();
+    initHeroFloat();
+    initCounters();
+    initMarquee();
+  }
+
+  /* Hero entrance animation — runs once on load */
+  function initPageLoad() {
     const tl = gsap.timeline({ delay: 0.2 });
 
-    // Eyebrow
-    tl.to('.hero__eyebrow', {
-      opacity: 1, y: 0, duration: 0.8, ease
+    // Header slides in
+    tl.from('.site-header', {
+      y: -80,
+      opacity: 0,
+      duration: 0.9,
+      ease: 'power3.out'
     });
 
-    // Title lines — staggered mask reveal
-    tl.to('.hero__title-line', {
-      opacity: 1, y: 0,
+    // Eyebrow fade
+    tl.to('.hero-eyebrow', {
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power2.out'
+    }, '-=0.3');
+
+    // Headline line-by-line mask reveal
+    tl.to('.hero-headline .reveal-line', {
+      y: '0%',
       duration: 0.9,
-      stagger: 0.12,
-      ease
-    }, '-=0.5');
+      ease: 'power3.out',
+      stagger: 0.12
+    }, '-=0.2');
 
-    // Description
-    tl.to('.hero__desc', {
-      opacity: 1, y: 0, duration: 0.7, ease
-    }, '-=0.5');
+    // Description + CTA
+    tl.to(['.hero-desc', '.hero-cta'], {
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power2.out',
+      stagger: 0.15
+    }, '-=0.3');
 
-    // CTA
-    tl.to('.hero__cta', {
-      opacity: 1, y: 0, duration: 0.6, ease
+    // Aside pills
+    tl.to('.aside-pill', {
+      opacity: 1,
+      x: 0,
+      duration: 0.7,
+      ease: 'power2.out',
+      stagger: 0.15
     }, '-=0.4');
 
-    // Visual
-    tl.fromTo('.hero__floating-img--main',
-      { opacity: 0, x: 40, scale: 0.96 },
-      { opacity: 1, x: 0, scale: 1, duration: 1.1, ease },
-      '-=0.8'
-    );
+    // Stats
+    tl.to('.aside-stats', {
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power2.out'
+    }, '-=0.3');
 
-    tl.fromTo('.hero__floating-img--accent',
-      { opacity: 0, scale: 0.8 },
-      { opacity: 1, scale: 1, duration: 0.8, ease },
-      '-=0.5'
-    );
-
-    tl.fromTo('.hero__scent-badge',
-      { opacity: 0, y: -10 },
-      { opacity: 1, y: 0, duration: 0.6, ease },
-      '-=0.4'
-    );
+    // Scroll indicator
+    tl.from('.scroll-indicator', {
+      opacity: 0,
+      duration: 0.6
+    }, '-=0.2');
   }
 
-  /* ── B) Top Sales — ScrollTrigger batch ── */
-  function initTopSalesAnimations() {
+  /* ScrollTrigger-based reveal animations */
+  function initScrollAnimations() {
+    // ─── Product cards — batch stagger ───
     ScrollTrigger.batch('.product-card', {
-      onEnter: (elements) => {
-        gsap.fromTo(elements, 
-          { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease }
-        );
-      },
-      start: 'top 85%',
-      once: true
-    });
-  }
-
-  /* ── C) Philosophy — Parallax ── */
-  function initPhilosophyAnimations() {
-    // Section title
-    gsap.from('.philosophy__title', {
-      opacity: 0, y: 50,
-      scrollTrigger: {
-        trigger: '.philosophy',
-        start: 'top 75%',
-        once: true
-      },
-      duration: 0.9, ease
-    });
-
-    gsap.from('.philosophy__body', {
-      opacity: 0, y: 30,
-      scrollTrigger: {
-        trigger: '.philosophy',
-        start: 'top 70%',
-        once: true
-      },
-      duration: 0.8, stagger: 0.15, ease, delay: 0.2
-    });
-
-    // Parallax on large image
-    gsap.to('.parallax-img', {
-      y: -80,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '.philosophy__img-col',
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 1.5
-      }
-    });
-
-    // Fast parallax on small image
-    gsap.to('.parallax-img-fast', {
-      y: -130,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '.philosophy__img-col',
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 0.8
-      }
-    });
-
-    // Big background text
-    gsap.fromTo('.philosophy__big-text',
-      { x: 100, opacity: 0 },
-      {
-        x: 0, opacity: 1,
-        scrollTrigger: {
-          trigger: '.philosophy',
-          start: 'top 80%',
-          end: 'bottom 20%',
-          scrub: 2
-        }
-      }
-    );
-  }
-
-  /* ── D) Collection grid entrance ── */
-  function initCollectionAnimations() {
-    ScrollTrigger.batch('.coll-card', {
-      onEnter: (elements) => {
-        gsap.fromTo(elements,
-          { opacity: 0, y: 35 },
-          { opacity: 1, y: 0, duration: 0.65, stagger: 0.07, ease }
-        );
+      onEnter: batch => {
+        gsap.to(batch, {
+          opacity: 1,
+          y: 0,
+          duration: 0.75,
+          ease: 'power3.out',
+          stagger: 0.12
+        });
       },
       start: 'top 88%',
       once: true
     });
 
-    // Filter bar slide in
-    gsap.from('.filter-bar', {
-      opacity: 0, y: 20,
+    // ─── Section headers ───
+    gsap.utils.toArray('.section-eyebrow, .section-title, .section-desc').forEach(el => {
+      gsap.from(el, {
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 90%',
+          once: true
+        },
+        opacity: 0,
+        y: 24,
+        duration: 0.8,
+        ease: 'power3.out'
+      });
+    });
+
+    // ─── Philosophy text column ───
+    gsap.from('.philosophy-text-col > *', {
       scrollTrigger: {
-        trigger: '.collection',
+        trigger: '.philosophy-section',
         start: 'top 80%',
         once: true
       },
-      duration: 0.7, ease
+      opacity: 0,
+      y: 30,
+      duration: 0.9,
+      ease: 'power3.out',
+      stagger: 0.1
+    });
+
+    // ─── Pillars stagger ───
+    gsap.from('.pillar', {
+      scrollTrigger: {
+        trigger: '.philosophy-pillars',
+        start: 'top 85%',
+        once: true
+      },
+      opacity: 0,
+      x: -20,
+      duration: 0.7,
+      ease: 'power2.out',
+      stagger: 0.15
+    });
+
+    // ─── Collection cards ───
+    ScrollTrigger.batch('.col-card', {
+      onEnter: batch => {
+        gsap.from(batch, {
+          opacity: 0,
+          y: 25,
+          duration: 0.65,
+          ease: 'power2.out',
+          stagger: 0.08
+        });
+      },
+      start: 'top 88%',
+      once: true
+    });
+
+    // ─── About section images ───
+    gsap.utils.toArray('.about-img-wrap').forEach((img, i) => {
+      gsap.from(img, {
+        scrollTrigger: {
+          trigger: img,
+          start: 'top 90%',
+          once: true
+        },
+        opacity: 0,
+        y: 40,
+        duration: 0.9,
+        delay: i * 0.15,
+        ease: 'power3.out'
+      });
+    });
+
+    // ─── Contact section ───
+    gsap.from('.contact-text > *', {
+      scrollTrigger: {
+        trigger: '.contact-section',
+        start: 'top 80%',
+        once: true
+      },
+      opacity: 0,
+      x: -30,
+      duration: 0.8,
+      ease: 'power3.out',
+      stagger: 0.1
+    });
+
+    gsap.from('.form-field, .btn-submit', {
+      scrollTrigger: {
+        trigger: '.contact-form',
+        start: 'top 85%',
+        once: true
+      },
+      opacity: 0,
+      y: 20,
+      duration: 0.6,
+      ease: 'power2.out',
+      stagger: 0.08
+    });
+
+    // ─── Footer ───
+    gsap.from('.footer-brand, .footer-col, .footer-newsletter', {
+      scrollTrigger: {
+        trigger: '.site-footer',
+        start: 'top 85%',
+        once: true
+      },
+      opacity: 0,
+      y: 20,
+      duration: 0.7,
+      ease: 'power2.out',
+      stagger: 0.1
     });
   }
 
-  /* ── E) About section — split scroll ── */
-  function initAboutAnimations() {
-    gsap.from('.about__sticky-col', {
-      opacity: 0, x: -40,
-      scrollTrigger: {
-        trigger: '.about',
-        start: 'top 75%',
-        once: true
-      },
-      duration: 0.9, ease
+  /* Heavy parallax on philosophy images */
+  function initParallax() {
+    gsap.utils.toArray('.parallax-img').forEach(img => {
+      const speed = parseFloat(img.dataset.speed || '-0.1');
+      gsap.to(img, {
+        y: () => img.offsetHeight * speed * 2,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: img.closest('.philosophy-section'),
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.5
+        }
+      });
+    });
+  }
+
+  /* Continuous floating animation on hero product */
+  function initHeroFloat() {
+    const floatEl = document.getElementById('heroFloat');
+    if (!floatEl) return;
+
+    gsap.to(floatEl, {
+      y: -20,
+      duration: 3.5,
+      ease: 'power1.inOut',
+      yoyo: true,
+      repeat: -1
     });
 
-    gsap.from('.about__scroll-img', {
-      opacity: 0, y: 50,
-      stagger: 0.15,
-      scrollTrigger: {
-        trigger: '.about__scroll-col',
-        start: 'top 80%',
-        once: true
-      },
-      duration: 0.8, ease
+    // Subtle rotation too
+    gsap.to(floatEl, {
+      rotation: 1.5,
+      duration: 5,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1
     });
+  }
 
-    gsap.from('.about__stat', {
-      opacity: 0, y: 30, scale: 0.95,
-      stagger: 0.1,
-      scrollTrigger: {
-        trigger: '.about__stat-row',
-        start: 'top 85%',
-        once: true
-      },
-      duration: 0.6, ease
-    });
-
-    // Number count-up animation
-    const stats = document.querySelectorAll('.about__stat-num');
-    stats.forEach(stat => {
-      const target = stat.textContent;
-      const numericTarget = parseFloat(target.replace(/[^0-9.]/g, ''));
-      const suffix = target.replace(/[0-9.]/g, '');
-
+  /* Animated counter for stats */
+  function initCounters() {
+    const counters = document.querySelectorAll('.stat-num');
+    counters.forEach(el => {
+      const target = parseInt(el.dataset.target, 10);
       ScrollTrigger.create({
-        trigger: stat,
-        start: 'top 85%',
+        trigger: el,
+        start: 'top 90%',
         once: true,
         onEnter: () => {
-          gsap.fromTo({ val: 0 },
-            { val: numericTarget,
-              duration: 1.5,
-              ease: 'power2.out',
-              onUpdate: function() {
-                stat.textContent = (Math.round(this.targets()[0].val)) + suffix;
-              }
+          gsap.to(el, {
+            innerText: target,
+            duration: 1.8,
+            ease: 'power2.out',
+            snap: { innerText: 1 },
+            onUpdate() {
+              el.textContent = Math.round(parseFloat(el.textContent));
             }
-          );
+          });
         }
       });
     });
   }
 
-  /* ── F) Contact section ── */
-  function initContactAnimations() {
-    gsap.from('.contact__title, .contact__body', {
-      opacity: 0, y: 40,
-      stagger: 0.15,
-      scrollTrigger: {
-        trigger: '.contact',
-        start: 'top 78%',
-        once: true
-      },
-      duration: 0.8, ease
-    });
+  /* Marquee — pure CSS but we can speed it up with gsap if needed */
+  function initMarquee() {
+    // Already handled via CSS animation; no JS needed
+  }
 
-    gsap.from('.form-field', {
-      opacity: 0, y: 20,
-      stagger: 0.1,
-      scrollTrigger: {
-        trigger: '.contact__form',
-        start: 'top 80%',
-        once: true
-      },
-      duration: 0.6, ease
-    });
-
-    gsap.from('.contact__info-item', {
-      opacity: 0, x: -20,
-      stagger: 0.1,
-      scrollTrigger: {
-        trigger: '.contact__info',
-        start: 'top 82%',
-        once: true
-      },
-      duration: 0.6, ease
+  /* GSAP cart item stagger — called externally */
+  function animateCartItems() {
+    const items = document.querySelectorAll('.cart-item');
+    gsap.to(items, {
+      opacity: 1,
+      x: 0,
+      duration: 0.5,
+      ease: 'power2.out',
+      stagger: 0.08,
+      delay: 0.2
     });
   }
 
-  /* ── G) Section headers ── */
-  function initSectionHeaders() {
-    gsap.utils.toArray('.section-header').forEach(header => {
-      const label = header.querySelector('.section-label');
-      const title = header.querySelector('.section-title');
-      const sub   = header.querySelector('.section-sub');
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: header,
-          start: 'top 82%',
-          once: true
-        }
+  /* GSAP filter animation — called from FilterModule */
+  function animateFilter(hide, show) {
+    const outTl = gsap.timeline();
+    if (hide.length) {
+      outTl.to(hide, {
+        opacity: 0,
+        scale: 0.92,
+        duration: 0.35,
+        ease: 'power2.in',
+        stagger: 0.03,
+        onComplete: () => hide.forEach(el => (el.style.display = 'none'))
       });
-
-      if (label) tl.from(label, { opacity: 0, y: 16, duration: 0.5, ease });
-      if (title) tl.from(title, { opacity: 0, y: 28, duration: 0.75, ease }, '-=0.3');
-      if (sub)   tl.from(sub,   { opacity: 0, y: 20, duration: 0.6, ease }, '-=0.4');
-    });
-  }
-
-  /* ── H) Magnetic button effect ── */
-  function initMagnetic() {
-    document.querySelectorAll('.magnetic').forEach(el => {
-      el.addEventListener('mousemove', (e) => {
-        const rect = el.getBoundingClientRect();
-        const cx   = rect.left + rect.width / 2;
-        const cy   = rect.top  + rect.height / 2;
-        const dx   = (e.clientX - cx) * 0.32;
-        const dy   = (e.clientY - cy) * 0.32;
-        gsap.to(el, { x: dx, y: dy, duration: 0.35, ease: 'power2.out' });
+    }
+    if (show.length) {
+      outTl.call(() => {
+        show.forEach(el => { el.style.display = ''; });
+        gsap.fromTo(show, { opacity: 0, scale: 0.94, y: 10 }, {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.45,
+          ease: 'power2.out',
+          stagger: 0.05
+        });
       });
+    }
+  }
 
-      el.addEventListener('mouseleave', () => {
-        gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.4)' });
-      });
+  return { init, animateCartItems, animateFilter };
+})();
+
+
+/* ─────────────────────────────────────────────────────────────
+   2. CUSTOM CURSOR MODULE
+   ───────────────────────────────────────────────────────────── */
+const CursorModule = (() => {
+  const dot  = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0;
+  let ringX  = 0, ringY  = 0;
+  const ringLag = 0.14;
+  let raf;
+
+  function init() {
+    if (!dot || !ring) return;
+
+    document.addEventListener('mousemove', onMove);
+    setupHoverListeners();
+    loop();
+  }
+
+  function onMove(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    gsap.set(dot, { x: mouseX, y: mouseY });
+  }
+
+  function loop() {
+    ringX += (mouseX - ringX) * ringLag;
+    ringY += (mouseY - ringY) * ringLag;
+    gsap.set(ring, { x: ringX, y: ringY });
+    raf = requestAnimationFrame(loop);
+  }
+
+  function setupHoverListeners() {
+    const hoverEls = document.querySelectorAll(
+      'a, button, .filter-btn, .product-card, .col-card, .pillar, .magnetic, input, textarea'
+    );
+    hoverEls.forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hovering'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hovering'));
     });
   }
 
-  /* ── I) Footer reveal ── */
-  function initFooterAnimations() {
-    gsap.from('.footer__brand, .footer__nav-col, .footer__newsletter', {
-      opacity: 0, y: 30,
-      stagger: 0.1,
-      scrollTrigger: {
-        trigger: '.footer',
-        start: 'top 90%',
-        once: true
-      },
-      duration: 0.7, ease
-    });
+  return { init };
+})();
+
+
+/* ─────────────────────────────────────────────────────────────
+   3. CART & UI STATE MODULE
+   ───────────────────────────────────────────────────────────── */
+const CartModule = (() => {
+  let cartState = JSON.parse(localStorage.getItem('lumiere_cart') || '[]');
+
+  // DOM refs
+  const cartDrawer  = document.getElementById('cartDrawer');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartItemsEl = document.getElementById('cartItems');
+  const cartEmptyEl = document.getElementById('cartEmpty');
+  const cartFooter  = document.getElementById('cartFooter');
+  const cartBadge   = document.getElementById('cartBadge');
+  const cartTotal   = document.getElementById('cartTotal');
+
+  function init() {
+    // Open / close
+    document.getElementById('cartToggle')?.addEventListener('click', openCart);
+    document.getElementById('cartClose')?.addEventListener('click', closeCart);
+    cartOverlay?.addEventListener('click', closeCart);
+
+    // Add to cart buttons (event delegation)
+    document.addEventListener('click', handleAddToCart);
+
+    // Persist & render on load
+    renderCart();
+    updateBadge();
+
+    // Header scroll effect
+    initHeaderScroll();
+
+    // Search overlay
+    initSearchOverlay();
+
+    // Contact form
+    initContactForm();
   }
 
-  /* ── J) Horizontal marquee for hero (optional ambient) ── */
-  function initScrollProgress() {
-    const progressBar = document.createElement('div');
-    progressBar.style.cssText = `
-      position: fixed; top: 0; left: 0; height: 2px; z-index: 9999;
-      background: linear-gradient(90deg, #C8926A, #E8B896);
-      width: 0%; transform-origin: left;
-      transition: width 0.1s linear;
+  /* ---------- Cart open / close ---------- */
+  function openCart() {
+    cartDrawer.classList.add('open');
+    cartOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    AnimationModule.animateCartItems();
+  }
+
+  function closeCart() {
+    cartDrawer.classList.remove('open');
+    cartOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ---------- Add to Cart ---------- */
+  function handleAddToCart(e) {
+    const btn = e.target.closest('.btn-add-cart');
+    if (!btn) return;
+
+    const name  = btn.dataset.name;
+    const price = parseFloat(btn.dataset.price);
+    if (!name || isNaN(price)) return;
+
+    addItem(name, price);
+    showToast(`${name} added to cart ✦`);
+  }
+
+  function addItem(name, price) {
+    const existing = cartState.find(i => i.name === name);
+    if (existing) {
+      existing.qty++;
+    } else {
+      cartState.push({ name, price, qty: 1, id: Date.now() });
+    }
+    save();
+    renderCart();
+    updateBadge();
+  }
+
+  /* ---------- Render Cart ---------- */
+  function renderCart() {
+    // Clear existing items (keep empty msg)
+    Array.from(cartItemsEl.querySelectorAll('.cart-item')).forEach(el => el.remove());
+
+    if (cartState.length === 0) {
+      cartEmptyEl.style.display = 'flex';
+      cartFooter.style.display  = 'none';
+      return;
+    }
+
+    cartEmptyEl.style.display = 'none';
+    cartFooter.style.display  = 'block';
+
+    let total = 0;
+
+    cartState.forEach(item => {
+      total += item.price * item.qty;
+      const el = createItemEl(item);
+      cartItemsEl.appendChild(el);
+    });
+
+    cartTotal.textContent = `$${total.toLocaleString()}`;
+  }
+
+  function createItemEl(item) {
+    const el = document.createElement('div');
+    el.className = 'cart-item';
+    el.dataset.id = item.id;
+    el.innerHTML = `
+      <div class="cart-item-img"></div>
+      <div>
+        <p class="cart-item-name">${item.name}</p>
+        <p class="cart-item-price">$${item.price}</p>
+        <div class="qty-control">
+          <button class="qty-btn minus" aria-label="Decrease">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn plus" aria-label="Increase">+</button>
+        </div>
+      </div>
+      <button class="cart-item-remove" aria-label="Remove">✕</button>
     `;
-    document.body.appendChild(progressBar);
 
+    el.querySelector('.plus').addEventListener('click', () => { changeQty(item.id, 1); });
+    el.querySelector('.minus').addEventListener('click', () => { changeQty(item.id, -1); });
+    el.querySelector('.cart-item-remove').addEventListener('click', () => { removeItem(item.id); });
+
+    return el;
+  }
+
+  function changeQty(id, delta) {
+    const item = cartState.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) removeItem(id);
+    else { save(); renderCart(); updateBadge(); }
+  }
+
+  function removeItem(id) {
+    const idx = cartState.findIndex(i => i.id === id);
+    if (idx === -1) return;
+
+    // Animate out
+    const el = cartItemsEl.querySelector(`[data-id="${id}"]`);
+    if (el) {
+      gsap.to(el, {
+        opacity: 0, x: 30, height: 0, padding: 0,
+        duration: 0.35,
+        ease: 'power2.in',
+        onComplete: () => {
+          cartState.splice(idx, 1);
+          save();
+          renderCart();
+          updateBadge();
+        }
+      });
+    } else {
+      cartState.splice(idx, 1);
+      save();
+      renderCart();
+      updateBadge();
+    }
+  }
+
+  function updateBadge() {
+    const total = cartState.reduce((acc, i) => acc + i.qty, 0);
+    cartBadge.textContent = total;
+    if (total > 0) cartBadge.classList.add('visible');
+    else           cartBadge.classList.remove('visible');
+  }
+
+  function save() {
+    localStorage.setItem('lumiere_cart', JSON.stringify(cartState));
+  }
+
+  /* ---------- Header Scroll Effect ---------- */
+  function initHeaderScroll() {
+    const header = document.getElementById('siteHeader');
     window.addEventListener('scroll', () => {
-      const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-      progressBar.style.width = pct + '%';
+      header.classList.toggle('scrolled', window.scrollY > 60);
     }, { passive: true });
   }
 
-  /* ── INIT ALL ── */
-  function init() {
-    initHeroAnimations();
-    initTopSalesAnimations();
-    initPhilosophyAnimations();
-    initCollectionAnimations();
-    initAboutAnimations();
-    initContactAnimations();
-    initSectionHeaders();
-    initMagnetic();
-    initFooterAnimations();
-    initScrollProgress();
+  /* ---------- Search Overlay ---------- */
+  function initSearchOverlay() {
+    const overlay = document.getElementById('searchOverlay');
+    const close   = document.getElementById('searchClose');
+    const input   = document.getElementById('searchInput');
+    const toggle  = document.getElementById('searchToggle');
+
+    toggle?.addEventListener('click', () => {
+      overlay.classList.add('open');
+      setTimeout(() => input?.focus(), 400);
+    });
+
+    close?.addEventListener('click', () => overlay.classList.remove('open'));
+
+    overlay?.addEventListener('keydown', e => {
+      if (e.key === 'Escape') overlay.classList.remove('open');
+    });
   }
 
-  // Wait for DOM + slight delay for fonts
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
+  /* ---------- Contact Form ---------- */
+  function initContactForm() {
+    const form = document.getElementById('contactForm');
+    form?.addEventListener('submit', e => {
+      e.preventDefault();
+      showToast('Message sent — we\'ll be in touch ✦');
+      form.reset();
+    });
   }
+
+  return { init, addItem };
 })();
 
-/* ═══════════════════════════════════════════════════════════
-   SMOOTH ANCHOR SCROLLING
-═══════════════════════════════════════════════════════════ */
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', (e) => {
-    const target = document.querySelector(anchor.getAttribute('href'));
-    if (!target) return;
-    e.preventDefault();
-    gsap.to(window, {
-      duration: 1.1,
-      scrollTo: { y: target, offsetY: 76 },
-      ease: 'power3.inOut'
-    });
-  });
-});
 
-/* ═══════════════════════════════════════════════════════════
-   GSAP SCROLL PLUGINS (ScrollTo polyfill)
-   — Gracefully degrades if plugin not loaded
-═══════════════════════════════════════════════════════════ */
-if (typeof gsap !== 'undefined' && !gsap.plugins?.scrollTo) {
-  // Fallback smooth scroll
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', (e) => {
-      const target = document.querySelector(anchor.getAttribute('href'));
-      if (!target) return;
-      e.preventDefault();
-      const top = target.getBoundingClientRect().top + window.scrollY - 76;
-      window.scrollTo({ top, behavior: 'smooth' });
+/* ─────────────────────────────────────────────────────────────
+   4. FILTER / COLLECTION MODULE
+   ───────────────────────────────────────────────────────────── */
+const FilterModule = (() => {
+  function init() {
+    const btns  = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.col-card');
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+
+        // Active state
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Partition cards
+        const hide = [];
+        const show = [];
+        cards.forEach(card => {
+          const match = filter === 'all' || card.dataset.cat === filter;
+          match ? show.push(card) : hide.push(card);
+        });
+
+        AnimationModule.animateFilter(hide, show);
+      });
+    });
+  }
+
+  return { init };
+})();
+
+
+/* ─────────────────────────────────────────────────────────────
+   5. UTILITY FUNCTIONS
+   ───────────────────────────────────────────────────────────── */
+let toastTimeout;
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove('show'), 3200);
+}
+
+/* Magnetic button effect */
+function initMagneticButtons() {
+  document.querySelectorAll('.magnetic').forEach(el => {
+    const strength = 0.35;
+
+    el.addEventListener('mousemove', e => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width  / 2;
+      const cy = rect.top  + rect.height / 2;
+      const dx = (e.clientX - cx) * strength;
+      const dy = (e.clientY - cy) * strength;
+      gsap.to(el, { x: dx, y: dy, duration: 0.3, ease: 'power2.out' });
+    });
+
+    el.addEventListener('mouseleave', () => {
+      gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.5)' });
     });
   });
 }
+
+
+/* ─────────────────────────────────────────────────────────────
+   BOOTSTRAP — run everything on DOMContentLoaded
+   ───────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  AnimationModule.init();
+  CursorModule.init();
+  CartModule.init();
+  FilterModule.init();
+  initMagneticButtons();
+});
