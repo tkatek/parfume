@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IKIRA — Fine Fragrance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ═══════════════════════════════════════
+       HEADER & NAVIGATION
+  ═══════════════════════════════════════ -->
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="#" class="header__logo">
+        <span class="logo-serif">IKIRA</span>
+      </a>
+      <nav class="header__nav">
+        <a href="#hero" class="nav-link">Home</a>
+        <a href="#collection" class="nav-link">Shop</a>
+        <a href="#philosophy" class="nav-link">About</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+      <div class="header__actions">
+        <button class="icon-btn" id="searchBtn" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+        <button class="icon-btn cart-btn" id="cartToggle" aria-label="Cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#hero" class="mobile-nav__link">Home</a>
+    <a href="#collection" class="mobile-nav__link">Shop</a>
+    <a href="#philosophy" class="mobile-nav__link">About</a>
+    <a href="#contact" class="mobile-nav__link">Contact</a>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       HERO SECTION
+  ═══════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero__bg-gradient"></div>
+    <div class="hero__content">
+      <div class="hero__text-block">
+        <div class="hero__eyebrow reveal-line">
+          <span>New Collection · 2025</span>
+        </div>
+        <h1 class="hero__title">
+          <span class="hero__title-line reveal-line"><em>New</em></span>
+          <span class="hero__title-line reveal-line">Collec</span>
+          <span class="hero__title-line reveal-line">tion</span>
+        </h1>
+        <p class="hero__desc reveal-line">
+          A refined fragrance where the delicate touch of magnolia and the juiciness of peach blend with the warm depth of woody notes.
+        </p>
+        <div class="hero__cta reveal-line">
+          <a href="#collection" class="btn btn--primary magnetic">Explore Now</a>
+          <a href="#philosophy" class="btn btn--ghost magnetic">Our Story</a>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <div class="hero__floating-img hero__floating-img--main float-anim">
+          <img src="" alt="Peachwood Perfume" />
+        </div>
+        <div class="hero__floating-img hero__floating-img--accent float-anim-slow">
+          <img src="" alt="Floral notes" />
+        </div>
+        <div class="hero__scent-badge">
+          <span class="badge-text">Eau de Parfum</span>
+          <span class="badge-sub">100ml · 3.4 fl oz</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero__scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       TOP SALES / STORE GRID
+  ═══════════════════════════════════════ -->
+  <section class="top-sales" id="top-sales">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Bestsellers</span>
+        <h2 class="section-title">Top Selling <em>Scents</em></h2>
+        <p class="section-sub">Discover the fragrances that have captivated thousands</p>
+      </div>
+      <div class="products-grid" id="topSalesGrid">
+
+        <div class="product-card" data-product-id="1" data-name="Peachwood" data-price="185">
+          <div class="product-card__img-wrap">
+            <img src="" alt="Peachwood" class="product-card__img" />
+            <div class="product-card__overlay">
+              <button class="btn btn--cart-add magnetic" data-id="1" data-name="Peachwood" data-price="185">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-card__info">
+            <h3 class="product-card__name">Peachwood</h3>
+            <p class="product-card__notes">Peach · Magnolia · Cedar</p>
+            <div class="product-card__bottom">
+              <span class="product-card__price">$185</span>
+              <span class="product-card__tag">Bestseller</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-product-id="2" data-name="Blanc Iris" data-price="210">
+          <div class="product-card__img-wrap">
+            <img src="" alt="Blanc Iris" class="product-card__img" />
+            <div class="product-card__overlay">
+              <button class="btn btn--cart-add magnetic" data-id="2" data-name="Blanc Iris" data-price="210">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-card__info">
+            <h3 class="product-card__name">Blanc Iris</h3>
+            <p class="product-card__notes">Iris · White Musk · Vetiver</p>
+            <div class="product-card__bottom">
+              <span class="product-card__price">$210</span>
+              <span class="product-card__tag">New</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-product-id="3" data-name="Oud Ambre" data-price="245">
+          <div class="product-card__img-wrap">
+            <img src="" alt="Oud Ambre" class="product-card__img" />
+            <div class="product-card__overlay">
+              <button class="btn btn--cart-add magnetic" data-id="3" data-name="Oud Ambre" data-price="245">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-card__info">
+            <h3 class="product-card__name">Oud Ambre</h3>
+            <p class="product-card__notes">Oud · Amber · Vanilla</p>
+            <div class="product-card__bottom">
+              <span class="product-card__price">$245</span>
+              <span class="product-card__tag">Limited</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-product-id="4" data-name="Jardin Vert" data-price="170">
+          <div class="product-card__img-wrap">
+            <img src="" alt="Jardin Vert" class="product-card__img" />
+            <div class="product-card__overlay">
+              <button class="btn btn--cart-add magnetic" data-id="4" data-name="Jardin Vert" data-price="170">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-card__info">
+            <h3 class="product-card__name">Jardin Vert</h3>
+            <p class="product-card__notes">Green Tea · Basil · Bergamot</p>
+            <div class="product-card__bottom">
+              <span class="product-card__price">$170</span>
+              <span class="product-card__tag">Fresh</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       PHILOSOPHY / WHY US
+  ═══════════════════════════════════════ -->
+  <section class="philosophy" id="philosophy">
+    <div class="container">
+      <div class="philosophy__grid">
+        <div class="philosophy__text-col">
+          <span class="section-label">Our Philosophy</span>
+          <h2 class="philosophy__title">
+            Crafted from <em>Nature's</em><br>Finest Ingredients
+          </h2>
+          <p class="philosophy__body">
+            Each fragrance is a journey — from the misty valleys where we source our florals to the ancient resin forests that yield our deepest woody notes. We work with master perfumers who understand that luxury is not manufactured, it is discovered.
+          </p>
+          <p class="philosophy__body">
+            Our commitment to sustainable sourcing means every drop tells a story of the earth it came from. Transparent, traceable, timeless.
+          </p>
+          <a href="#" class="btn btn--outline magnetic">Our Sourcing Process</a>
+        </div>
+        <div class="philosophy__img-col">
+          <div class="philosophy__img philosophy__img--large parallax-img">
+            <img src="" alt="Raw floral ingredients" />
+            <div class="philosophy__img-label">Rose de Mai · Grasse, France</div>
+          </div>
+          <div class="philosophy__img philosophy__img--small parallax-img-fast">
+            <img src="" alt="Wood ingredients" />
+            <div class="philosophy__img-label">Cedarwood · Atlas Mountains</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="philosophy__big-text" aria-hidden="true">NATURE</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       FULL COLLECTION
+  ═══════════════════════════════════════ -->
+  <section class="collection" id="collection">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Full Collection</span>
+        <h2 class="section-title">Every <em>Mood,</em> Every Moment</h2>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="floral">Floral</button>
+        <button class="filter-btn" data-filter="woody">Woody</button>
+        <button class="filter-btn" data-filter="fresh">Fresh</button>
+        <button class="filter-btn" data-filter="oriental">Oriental</button>
+      </div>
+      <div class="collection-grid" id="collectionGrid">
+
+        <div class="coll-card" data-category="woody">
+          <div class="coll-card__img"><img src="" alt="Peachwood" /></div>
+          <h4 class="coll-card__name">Peachwood</h4>
+          <p class="coll-card__notes">Peach · Magnolia · Cedar</p>
+          <div class="coll-card__foot">
+            <span class="coll-card__price">$185</span>
+            <button class="coll-card__add magnetic" data-id="1" data-name="Peachwood" data-price="185">+</button>
+          </div>
+        </div>
+
+        <div class="coll-card" data-category="floral">
+          <div class="coll-card__img"><img src="" alt="Blanc Iris" /></div>
+          <h4 class="coll-card__name">Blanc Iris</h4>
+          <p class="coll-card__notes">Iris · White Musk · Vetiver</p>
+          <div class="coll-card__foot">
+            <span class="coll-card__price">$210</span>
+            <button class="coll-card__add magnetic" data-id="2" data-name="Blanc Iris" data-price="210">+</button>
+          </div>
+        </div>
+
+        <div class="coll-card" data-category="oriental">
+          <div class="coll-card__img"><img src="" alt="Oud Ambre" /></div>
+          <h4 class="coll-card__name">Oud Ambre</h4>
+          <p class="coll-card__notes">Oud · Amber · Vanilla</p>
+          <div class="coll-card__foot">
+            <span class="coll-card__price">$245</span>
+            <button class="coll-card__add magnetic" data-id="3" data-name="Oud Ambre" data-price="245">+</button>
+          </div>
+        </div>
+
+        <div class="coll-card" data-category="fresh">
+          <div class="coll-card__img"><img src="" alt="Jardin Vert" /></div>
+          <h4 class="coll-card__name">Jardin Vert</h4>
+          <p class="coll-card__notes">Green Tea · Basil · Bergamot</p>
+          <div class="coll-card__foot">
+            <span class="coll-card__price">$170</span>
+            <button class="coll-card__add magnetic" data-id="4" data-name="Jardin Vert" data-price="170">+</button>
+          </div>
+        </div>
+
+        <div class="coll-card" data-category="floral">
+          <div class="coll-card__img"><img src="" alt="Rose Céleste" /></div>
+          <h4 class="coll-card__name">Rose Céleste</h4>
+          <p class="coll-card__notes">Rose · Lychee · Sandalwood</p>
+          <div class="coll-card__foot">
+            <span class="coll-card__price">$195</span>
+            <button class="coll-card__add magnetic" data-id="5" data-name="Rose Céleste" data-price="195">+</button>
+          </div>
+        </div>
+
+        <div class="coll-card" data-category="fresh">
+          <div class="coll-card__img"><img src="" alt="Aqua Lumière" /></div>
+          <h4 class="coll-card__name">Aqua Lumière</h4>
+          <p class="coll-card__notes">Sea Salt · Neroli · Driftwood</p>
+          <div class="coll-card__foot">
+            <span class="coll-card__price">$160</span>
+            <button class="coll-card__add magnetic" data-id="6" data-name="Aqua Lumière" data-price="160">+</button>
+          </div>
+        </div>
+
+        <div class="coll-card" data-category="oriental">
+          <div class="coll-card__img"><img src="" alt="Noir Safran" /></div>
+          <h4 class="coll-card__name">Noir Safran</h4>
+          <p class="coll-card__notes">Saffron · Rose · Musks</p>
+          <div class="coll-card__foot">
+            <span class="coll-card__price">$265</span>
+            <button class="coll-card__add magnetic" data-id="7" data-name="Noir Safran" data-price="265">+</button>
+          </div>
+        </div>
+
+        <div class="coll-card" data-category="woody">
+          <div class="coll-card__img"><img src="" alt="Forêt Noire" /></div>
+          <h4 class="coll-card__name">Forêt Noire</h4>
+          <p class="coll-card__notes">Fir Balsam · Smoke · Patchouli</p>
+          <div class="coll-card__foot">
+            <span class="coll-card__price">$220</span>
+            <button class="coll-card__add magnetic" data-id="8" data-name="Forêt Noire" data-price="220">+</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       ABOUT US / STORY
+  ═══════════════════════════════════════ -->
+  <section class="about" id="about">
+    <div class="about__inner">
+      <div class="about__sticky-col">
+        <span class="section-label">Our Story</span>
+        <h2 class="about__title">
+          Born from<br><em>Obsession,</em><br>Crafted with<br>Purpose
+        </h2>
+        <p class="about__body">
+          IKIRA was founded in 2019 by a duo of perfumers who believed that fragrance should feel like a second skin — intimate, personal, unforgettable.
+        </p>
+        <p class="about__body">
+          Every bottle is hand-filled in our Grasse atelier, where time moves differently and quality is the only currency.
+        </p>
+        <a href="#collection" class="btn btn--primary magnetic">Shop the Collection</a>
+      </div>
+      <div class="about__scroll-col">
+        <div class="about__scroll-img">
+          <img src="" alt="The atelier" />
+          <div class="about__img-caption">Our atelier in Grasse, 2019</div>
+        </div>
+        <div class="about__scroll-img about__scroll-img--offset">
+          <img src="" alt="Perfumer at work" />
+          <div class="about__img-caption">Master Perfumer, Antoine Bellair</div>
+        </div>
+        <div class="about__scroll-img">
+          <img src="" alt="Fragrance testing" />
+          <div class="about__img-caption">The testing room</div>
+        </div>
+        <div class="about__stat-row">
+          <div class="about__stat">
+            <span class="about__stat-num">47</span>
+            <span class="about__stat-label">Rare Ingredients</span>
+          </div>
+          <div class="about__stat">
+            <span class="about__stat-num">6</span>
+            <span class="about__stat-label">Years Perfecting</span>
+          </div>
+          <div class="about__stat">
+            <span class="about__stat-num">12K+</span>
+            <span class="about__stat-label">Happy Customers</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="about__bg-text" aria-hidden="true">IKIRA</div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       CONTACT & FOOTER
+  ═══════════════════════════════════════ -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact__grid">
+        <div class="contact__left">
+          <span class="section-label">Get in Touch</span>
+          <h2 class="contact__title">Let's <em>Connect</em></h2>
+          <p class="contact__body">For bespoke orders, wholesale inquiries, or simply to share your fragrance story — we'd love to hear from you.</p>
+          <div class="contact__info">
+            <div class="contact__info-item">
+              <span class="contact__info-label">Email</span>
+              <a href="mailto:hello@ikira.com">hello@ikira.com</a>
+            </div>
+            <div class="contact__info-item">
+              <span class="contact__info-label">Atelier</span>
+              <span>12 Rue du Parfum, Grasse, France</span>
+            </div>
+            <div class="contact__info-item">
+              <span class="contact__info-label">Follow</span>
+              <div class="contact__social">
+                <a href="#" class="social-link">Instagram</a>
+                <a href="#" class="social-link">Pinterest</a>
+                <a href="#" class="social-link">TikTok</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="contact__right">
+          <form class="contact__form" id="contactForm" novalidate>
+            <div class="form-field">
+              <input type="text" id="name" name="name" required autocomplete="off" />
+              <label for="name">Your Name</label>
+              <span class="form-line"></span>
+            </div>
+            <div class="form-field">
+              <input type="email" id="email" name="email" required autocomplete="off" />
+              <label for="email">Email Address</label>
+              <span class="form-line"></span>
+            </div>
+            <div class="form-field">
+              <input type="text" id="subject" name="subject" autocomplete="off" />
+              <label for="subject">Subject</label>
+              <span class="form-line"></span>
+            </div>
+            <div class="form-field form-field--textarea">
+              <textarea id="message" name="message" rows="4" required></textarea>
+              <label for="message">Your Message</label>
+              <span class="form-line"></span>
+            </div>
+            <button type="submit" class="btn btn--submit magnetic">
+              <span class="btn-text">Send Message</span>
+              <span class="btn-fill"></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <div class="footer__logo">IKIRA</div>
+        <p class="footer__tagline">Fine Fragrance, Thoughtfully Made</p>
+      </div>
+      <div class="footer__nav-col">
+        <h4 class="footer__col-title">Collection</h4>
+        <ul>
+          <li><a href="#">Floral</a></li>
+          <li><a href="#">Woody</a></li>
+          <li><a href="#">Fresh</a></li>
+          <li><a href="#">Oriental</a></li>
+        </ul>
+      </div>
+      <div class="footer__nav-col">
+        <h4 class="footer__col-title">Company</h4>
+        <ul>
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Sustainability</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer__newsletter">
+        <h4 class="footer__col-title">The IKIRA Edit</h4>
+        <p>Monthly dispatches on fragrance, beauty, and the art of living well.</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="your@email.com" class="newsletter-input" />
+          <button class="newsletter-btn magnetic">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2025 IKIRA Fine Fragrance. All rights reserved.</span>
+      <div class="footer__legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms</a>
+        <a href="#">Shipping</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════
+       CART DRAWER
+  ═══════════════════════════════════════ -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart" role="dialog">
+    <div class="cart-drawer__header">
+      <h3 class="cart-drawer__title">Your Cart <span id="cartCount">(0)</span></h3>
+      <button class="cart-drawer__close magnetic" id="cartClose" aria-label="Close cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer__body" id="cartBody">
+      <div class="cart-empty" id="cartEmpty">
+        <div class="cart-empty__icon">✦</div>
+        <p>Your cart is empty</p>
+        <a href="#collection" class="btn btn--ghost">Explore Collection</a>
+      </div>
+      <ul class="cart-items" id="cartItems"></ul>
+    </div>
+    <div class="cart-drawer__footer" id="cartFooter">
+      <div class="cart-totals">
+        <span>Subtotal</span>
+        <span id="cartSubtotal">$0</span>
+      </div>
+      <p class="cart-shipping-note">Free shipping on orders over $150</p>
+      <button class="btn btn--checkout magnetic">
+        <span>Proceed to Checkout</span>
+        <span class="checkout-glow"></span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
