@@ -3,427 +3,151 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Cart — IKIRA Fine Fragrance</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <title>Your Cart — LUMIÈRE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css" />
   <link rel="stylesheet" href="cart.css" />
 </head>
 <body>
 
-  <!-- Custom Cursor -->
   <div class="cursor-dot" id="cursorDot"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- Progress Bar -->
-  <div class="progress-bar" id="progressBar"></div>
-
-  <!-- ═══════════════════════ HEADER ══════════════════════ -->
-  <header class="header" id="header">
-    <div class="header__inner">
-      <a href="index.html" class="header__logo">IKIRA</a>
-      <nav class="header__nav">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="full-collection.html" class="nav-link">Shop</a>
+  <!-- HEADER -->
+  <header class="site-header scrolled" id="siteHeader">
+    <div class="header-inner">
+      <a href="index.html" class="logo magnetic">LUMIÈRE</a>
+      <nav class="main-nav">
+        <a href="index.html#home" class="nav-link">Home</a>
+        <a href="index.html#shop" class="nav-link">Shop</a>
         <a href="index.html#philosophy" class="nav-link">About</a>
         <a href="index.html#contact" class="nav-link">Contact</a>
       </nav>
-      <div class="header__right">
-        <a href="full-collection.html" class="header__continue-link">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-          Continue Shopping
-        </a>
+      <div class="header-actions">
+        <a href="index.html" class="btn-ghost" style="font-size:0.72rem;">← Continue Shopping</a>
       </div>
     </div>
   </header>
 
-  <!-- ═══════════════════════ MAIN ════════════════════════ -->
-  <main class="cart-page" id="cartPage">
+  <!-- Cart Page -->
+  <main class="cart-page">
 
-    <!-- Breadcrumb -->
-    <div class="breadcrumb">
-      <div class="breadcrumb__inner">
-        <a href="index.html">Home</a>
-        <span class="breadcrumb__sep">›</span>
-        <a href="full-collection.html">Shop</a>
-        <span class="breadcrumb__sep">›</span>
-        <span class="breadcrumb__current">Cart</span>
-      </div>
+    <div class="cart-page-header">
+      <p class="section-eyebrow">Your Selection</p>
+      <h1 class="cart-page-title">Shopping <em>Cart</em></h1>
     </div>
 
-    <!-- Checkout Steps -->
-    <div class="checkout-steps">
-      <div class="checkout-step active" data-step="1">
-        <div class="step-circle">1</div>
-        <span class="step-label">Cart</span>
-      </div>
-      <div class="step-connector"></div>
-      <div class="checkout-step" data-step="2">
-        <div class="step-circle">2</div>
-        <span class="step-label">Details</span>
-      </div>
-      <div class="step-connector"></div>
-      <div class="checkout-step" data-step="3">
-        <div class="step-circle">3</div>
-        <span class="step-label">Payment</span>
-      </div>
-      <div class="step-connector"></div>
-      <div class="checkout-step" data-step="4">
-        <div class="step-circle">4</div>
-        <span class="step-label">Confirm</span>
-      </div>
-    </div>
+    <div class="cart-page-layout">
 
-    <!-- Page Title -->
-    <div class="cart-page__title-row">
-      <h1 class="cart-page__title">Your <em>Cart</em></h1>
-      <span class="cart-page__item-count" id="totalItemCount">3 items</span>
-    </div>
+      <!-- Cart Items Column -->
+      <div class="cart-page-items">
 
-    <!-- Two-column layout -->
-    <div class="cart-layout" id="cartLayout">
-
-      <!-- ── LEFT: Cart Items ── -->
-      <section class="cart-items-section" id="cartItemsSection">
-
-        <!-- Cart Header Row -->
-        <div class="cart-table-head">
-          <span>Product</span>
-          <span>Details</span>
-          <span>Qty</span>
+        <div class="cart-page-thead">
+          <span>Fragrance</span>
+          <span>Price</span>
+          <span>Quantity</span>
           <span>Total</span>
-          <span></span>
         </div>
 
-        <!-- Items List -->
-        <ul class="cart-list" id="cartList">
-
-          <!-- Item 1 -->
-          <li class="cart-row" data-id="1" data-base-price="185">
-            <div class="cart-row__img">
-              <img src="" alt="Peachwood" />
-              <div class="cart-row__img-bg"></div>
-            </div>
-            <div class="cart-row__details">
-              <span class="cart-row__category">Woody</span>
-              <h3 class="cart-row__name">Peachwood</h3>
-              <p class="cart-row__notes">Peach · Magnolia · Cedar</p>
-              <span class="cart-row__size">Eau de Parfum · 100ml</span>
-            </div>
-            <div class="cart-row__qty-wrap">
-              <div class="qty-control">
-                <button class="qty-btn qty-btn--minus" aria-label="Decrease quantity">
-                  <svg width="12" height="2" viewBox="0 0 12 2"><path d="M1 1h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <input class="qty-input" type="number" value="1" min="1" max="10" aria-label="Quantity" />
-                <button class="qty-btn qty-btn--plus" aria-label="Increase quantity">
-                  <svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-              </div>
-            </div>
-            <div class="cart-row__price">
-              <span class="cart-row__total">$185.00</span>
-              <span class="cart-row__unit-price">$185 / each</span>
-            </div>
-            <div class="cart-row__actions">
-              <button class="cart-row__remove" aria-label="Remove item" title="Remove">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
-              </button>
-              <button class="cart-row__wishlist" aria-label="Save for later" title="Save for later">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-              </button>
-            </div>
-          </li>
-
-          <!-- Item 2 -->
-          <li class="cart-row" data-id="2" data-base-price="210">
-            <div class="cart-row__img">
-              <img src="" alt="Blanc Iris" />
-              <div class="cart-row__img-bg"></div>
-            </div>
-            <div class="cart-row__details">
-              <span class="cart-row__category">Floral</span>
-              <h3 class="cart-row__name">Blanc Iris</h3>
-              <p class="cart-row__notes">Iris · White Musk · Vetiver</p>
-              <span class="cart-row__size">Eau de Parfum · 100ml</span>
-            </div>
-            <div class="cart-row__qty-wrap">
-              <div class="qty-control">
-                <button class="qty-btn qty-btn--minus" aria-label="Decrease quantity">
-                  <svg width="12" height="2" viewBox="0 0 12 2"><path d="M1 1h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <input class="qty-input" type="number" value="2" min="1" max="10" aria-label="Quantity" />
-                <button class="qty-btn qty-btn--plus" aria-label="Increase quantity">
-                  <svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-              </div>
-            </div>
-            <div class="cart-row__price">
-              <span class="cart-row__total">$420.00</span>
-              <span class="cart-row__unit-price">$210 / each</span>
-            </div>
-            <div class="cart-row__actions">
-              <button class="cart-row__remove" aria-label="Remove item" title="Remove">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
-              </button>
-              <button class="cart-row__wishlist" aria-label="Save for later" title="Save for later">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-              </button>
-            </div>
-          </li>
-
-          <!-- Item 3 -->
-          <li class="cart-row" data-id="3" data-base-price="245">
-            <div class="cart-row__img">
-              <img src="" alt="Oud Ambre" />
-              <div class="cart-row__img-bg"></div>
-            </div>
-            <div class="cart-row__details">
-              <span class="cart-row__category">Oriental</span>
-              <h3 class="cart-row__name">Oud Ambre</h3>
-              <p class="cart-row__notes">Oud · Amber · Vanilla</p>
-              <span class="cart-row__size">Eau de Parfum · 100ml</span>
-            </div>
-            <div class="cart-row__qty-wrap">
-              <div class="qty-control">
-                <button class="qty-btn qty-btn--minus" aria-label="Decrease quantity">
-                  <svg width="12" height="2" viewBox="0 0 12 2"><path d="M1 1h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <input class="qty-input" type="number" value="1" min="1" max="10" aria-label="Quantity" />
-                <button class="qty-btn qty-btn--plus" aria-label="Increase quantity">
-                  <svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-              </div>
-            </div>
-            <div class="cart-row__price">
-              <span class="cart-row__total">$245.00</span>
-              <span class="cart-row__unit-price">$245 / each</span>
-            </div>
-            <div class="cart-row__actions">
-              <button class="cart-row__remove" aria-label="Remove item" title="Remove">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
-              </button>
-              <button class="cart-row__wishlist" aria-label="Save for later" title="Save for later">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-              </button>
-            </div>
-          </li>
-
-        </ul>
-
-        <!-- Empty State (hidden by default) -->
-        <div class="cart-empty-state" id="cartEmptyState" style="display:none">
-          <div class="cart-empty-state__symbol">✦</div>
-          <h2 class="cart-empty-state__title">Your cart is empty</h2>
-          <p class="cart-empty-state__sub">Discover fragrances crafted from nature's finest ingredients</p>
-          <a href="full-collection.html" class="btn btn--primary">Explore the Collection</a>
+        <div id="cartPageItems">
+          <!-- Populated by JS -->
         </div>
 
-        <!-- Coupon Row -->
-        <div class="coupon-row" id="couponRow">
-          <div class="coupon-field">
-            <input type="text" id="couponInput" class="coupon-input" placeholder="Gift card or discount code" autocomplete="off" />
-            <button class="coupon-btn" id="couponBtn">Apply</button>
+        <div class="cart-page-empty" id="cartPageEmpty" style="display:none;">
+          <p>Your cart is empty.</p>
+          <a href="index.html#shop" class="btn-outline magnetic" style="margin-top:1.5rem;">Explore Collection →</a>
+        </div>
+
+        <!-- Coupon row -->
+        <div class="coupon-row">
+          <input type="text" class="coupon-input" placeholder="Promo code" id="couponInput" />
+          <button class="coupon-btn magnetic" id="couponBtn">Apply</button>
+        </div>
+
+      </div>
+
+      <!-- Order Summary -->
+      <aside class="cart-summary">
+        <h3 class="summary-title">Order Summary</h3>
+
+        <div class="summary-lines">
+          <div class="summary-line">
+            <span>Subtotal</span>
+            <span id="summarySubtotal">$0</span>
           </div>
-          <div class="coupon-feedback" id="couponFeedback"></div>
-        </div>
-
-        <!-- Shipping Notice Bar -->
-        <div class="shipping-progress-wrap" id="shippingProgressWrap">
-          <div class="shipping-progress-bar">
-            <div class="shipping-progress-fill" id="shippingFill"></div>
+          <div class="summary-line">
+            <span>Shipping</span>
+            <span class="summary-free">Complimentary</span>
           </div>
-          <p class="shipping-progress-text" id="shippingText">
-            You're <strong id="shippingRemaining">$0</strong> away from free shipping!
-          </p>
-        </div>
-
-      </section>
-
-      <!-- ── RIGHT: Order Summary ── -->
-      <aside class="cart-summary" id="cartSummary">
-        <div class="cart-summary__inner">
-
-          <h2 class="cart-summary__title">Order Summary</h2>
-
-          <!-- Summary Lines -->
-          <div class="summary-lines">
-            <div class="summary-line">
-              <span>Subtotal <em id="summaryItemCount">(4 items)</em></span>
-              <span id="summarySubtotal">$850.00</span>
-            </div>
-            <div class="summary-line" id="discountLine" style="display:none">
-              <span class="summary-line--discount">Discount</span>
-              <span class="summary-line--discount" id="discountAmount">−$0.00</span>
-            </div>
-            <div class="summary-line">
-              <span>Shipping</span>
-              <span id="summaryShipping" class="summary-shipping-val">Free</span>
-            </div>
-            <div class="summary-line">
-              <span>Est. Tax (8%)</span>
-              <span id="summaryTax">$68.00</span>
-            </div>
+          <div class="summary-line" id="discountLine" style="display:none;">
+            <span>Discount</span>
+            <span id="discountVal" style="color:var(--accent-sage);">−$0</span>
           </div>
-
-          <div class="summary-divider"></div>
-
-          <div class="summary-total">
+          <div class="summary-line summary-total">
             <span>Total</span>
-            <span id="summaryTotal">$918.00</span>
+            <span id="summaryTotal">$0</span>
           </div>
-
-          <!-- Gift Wrap Option -->
-          <label class="gift-wrap-toggle">
-            <div class="gift-wrap-toggle__left">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="9" width="22" height="13" rx="2"/><path d="M12 22V9"/><path d="M12 9H7.5a2.5 2.5 0 1 1 0-5C11 4 12 9 12 9z"/><path d="M12 9h4.5a2.5 2.5 0 0 0 0-5C13 4 12 9 12 9z"/></svg>
-              <div>
-                <span class="gift-wrap-toggle__label">Gift wrapping</span>
-                <span class="gift-wrap-toggle__sub">Luxury box & ribbon · +$12</span>
-              </div>
-            </div>
-            <div class="toggle-switch">
-              <input type="checkbox" id="giftWrap" class="toggle-input" />
-              <span class="toggle-track"></span>
-            </div>
-          </label>
-
-          <!-- Checkout Button -->
-          <button class="btn-checkout" id="checkoutBtn">
-            <span class="btn-checkout__text">Proceed to Checkout</span>
-            <span class="btn-checkout__icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </span>
-            <span class="btn-checkout__shimmer"></span>
-          </button>
-
-          <!-- Trust Badges -->
-          <div class="trust-badges">
-            <div class="trust-badge">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span>Secure checkout</span>
-            </div>
-            <div class="trust-badge">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              <span>Free returns</span>
-            </div>
-            <div class="trust-badge">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-              <span>Secure payment</span>
-            </div>
-          </div>
-
-          <!-- Payment Icons -->
-          <div class="payment-methods">
-            <span class="payment-method">VISA</span>
-            <span class="payment-method">MC</span>
-            <span class="payment-method">AMEX</span>
-            <span class="payment-method">PayPal</span>
-            <span class="payment-method">Apple Pay</span>
-          </div>
-
         </div>
 
-        <!-- Sticky CTA on mobile -->
-        <div class="mobile-checkout-bar" id="mobileCta">
-          <div class="mobile-checkout-bar__total">
-            <span>Total</span>
-            <span id="mobileTotalAmount">$918.00</span>
-          </div>
-          <button class="btn-checkout btn-checkout--compact" id="mobileCheckoutBtn">
-            Checkout
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
+        <div class="summary-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Secure checkout. Complimentary worldwide shipping.
         </div>
 
+        <button class="btn-checkout-full magnetic" id="checkoutBtn">
+          <span>Proceed to Payment</span>
+          <span class="checkout-arrow">→</span>
+        </button>
+
+        <div class="payment-icons">
+          <span>VISA</span><span>MC</span><span>AMEX</span><span>PayPal</span>
+        </div>
       </aside>
 
     </div>
 
-    <!-- ── YOU MAY ALSO LIKE ── -->
-    <section class="also-like" id="alsoLike">
-      <div class="also-like__header">
-        <span class="section-label">Complete Your Collection</span>
-        <h2 class="also-like__title">You May <em>Also Like</em></h2>
+    <!-- You may also like -->
+    <section class="cart-reco">
+      <div class="section-header">
+        <p class="section-eyebrow">Complete the Experience</p>
+        <h2 class="section-title" style="font-size:clamp(1.8rem,3vw,2.8rem);">You May Also <em>Love</em></h2>
       </div>
-      <div class="also-like__grid">
-
-        <div class="rec-card">
-          <div class="rec-card__img"><img src="" alt="Jardin Vert" /></div>
-          <div class="rec-card__info">
-            <h4 class="rec-card__name">Jardin Vert</h4>
-            <p class="rec-card__notes">Green Tea · Basil · Bergamot</p>
-            <div class="rec-card__foot">
-              <span class="rec-card__price">$170</span>
-              <button class="rec-card__add" data-id="4" data-name="Jardin Vert" data-price="170">Add</button>
-            </div>
-          </div>
+      <div class="reco-grid">
+        <div class="reco-card">
+          <div class="reco-img img-placeholder"></div>
+          <h4>Rose Lumière</h4>
+          <p>$185</p>
+          <button class="btn-add-cart reco-atc" data-name="Rose Lumière" data-price="185">+ Add to Cart</button>
         </div>
-
-        <div class="rec-card">
-          <div class="rec-card__img"><img src="" alt="Rose Céleste" /></div>
-          <div class="rec-card__info">
-            <h4 class="rec-card__name">Rose Céleste</h4>
-            <p class="rec-card__notes">Rose · Lychee · Sandalwood</p>
-            <div class="rec-card__foot">
-              <span class="rec-card__price">$195</span>
-              <button class="rec-card__add" data-id="5" data-name="Rose Céleste" data-price="195">Add</button>
-            </div>
-          </div>
+        <div class="reco-card">
+          <div class="reco-img img-placeholder"></div>
+          <h4>Encens Doré</h4>
+          <p>$240</p>
+          <button class="btn-add-cart reco-atc" data-name="Encens Doré" data-price="240">+ Add to Cart</button>
         </div>
-
-        <div class="rec-card">
-          <div class="rec-card__img"><img src="" alt="Aqua Lumière" /></div>
-          <div class="rec-card__info">
-            <h4 class="rec-card__name">Aqua Lumière</h4>
-            <p class="rec-card__notes">Sea Salt · Neroli · Driftwood</p>
-            <div class="rec-card__foot">
-              <span class="rec-card__price">$160</span>
-              <button class="rec-card__add" data-id="6" data-name="Aqua Lumière" data-price="160">Add</button>
-            </div>
-          </div>
+        <div class="reco-card">
+          <div class="reco-img img-placeholder"></div>
+          <h4>Aube Fraîche</h4>
+          <p>$165</p>
+          <button class="btn-add-cart reco-atc" data-name="Aube Fraîche" data-price="165">+ Add to Cart</button>
         </div>
-
-        <div class="rec-card">
-          <div class="rec-card__img"><img src="" alt="Yuzu Éclat" /></div>
-          <div class="rec-card__info">
-            <h4 class="rec-card__name">Yuzu Éclat</h4>
-            <p class="rec-card__notes">Yuzu · Ginger · White Tea</p>
-            <div class="rec-card__foot">
-              <span class="rec-card__price">$155</span>
-              <button class="rec-card__add" data-id="10" data-name="Yuzu Éclat" data-price="155">Add</button>
-            </div>
-          </div>
+        <div class="reco-card">
+          <div class="reco-img img-placeholder"></div>
+          <h4>Vétiver Royal</h4>
+          <p>$225</p>
+          <button class="btn-add-cart reco-atc" data-name="Vétiver Royal" data-price="225">+ Add to Cart</button>
         </div>
-
       </div>
     </section>
 
   </main>
 
-  <!-- ═══════════════════════ FOOTER ══════════════════════ -->
-  <footer class="footer">
-    <div class="footer__inner">
-      <div class="footer__logo">IKIRA</div>
-      <div class="footer__links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms</a>
-        <a href="#">Shipping & Returns</a>
-        <a href="index.html#contact">Contact</a>
-      </div>
-      <span class="footer__copy">© 2025 IKIRA Fine Fragrance</span>
-    </div>
-  </footer>
+  <div class="toast" id="toast"></div>
 
-  <!-- Toast Notification -->
-  <div class="toast" id="toast" role="alert" aria-live="polite">
-    <span class="toast__icon">✓</span>
-    <span class="toast__msg" id="toastMsg">Item added to cart</span>
-  </div>
-
-  <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="cart.js"></script>
 </body>
-</html>
+</html> 
