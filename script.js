@@ -1,658 +1,561 @@
-/* ============================================================
-   LUMIÈRE — script.js  (Final Production Version)
+/* ══════════════════════════════════════════════════════════
+   LUMIÈRE — script.js  v3 Final
+   
+   KEY FIX: Elements are VISIBLE by default (no opacity:0 in CSS).
+   The body gets class "gsap-ready" only AFTER GSAP loads, which 
+   triggers CSS to hide elements before GSAP animates them in.
+   This prevents the blank-screen / invisible-hero bug.
 
-   Module Architecture:
-   ─────────────────────────────────────────────────────────
-   1. AnimationModule  — all GSAP / ScrollTrigger logic
-   2. CursorModule     — custom cursor + hover states
-   3. BurgerModule     — mobile menu open / close
-   4. CartModule       — cart drawer, state, localStorage
-   5. FilterModule     — collection category filter
-   6. initMagnetic()   — magnetic button micro-interaction
-   7. Bootstrap        — DOMContentLoaded wiring
-   ============================================================ */
+   Modules:
+   1. SafeGSAP      — wrapper that activates gsap-ready flag
+   2. HeroModule    — hero floating + circle animations
+   3. ScrollReveal  — scroll-triggered reveals (safe, non-blocking)
+   4. BurgerModule  — mobile menu
+   5. CartModule    — cart drawer + add-to-cart
+   6. FilterModule  — store section category filter
+   7. CursorModule  — custom cursor (desktop only)
+   8. SearchModule  — search overlay
+   9. Bootstrap     — wires everything on DOMContentLoaded
+══════════════════════════════════════════════════════════ */
 
 'use strict';
 
-/* ═══════════════════════════════════════════════════════════
-   1. ANIMATION MODULE
-   ═══════════════════════════════════════════════════════════ */
-const AnimationModule = (() => {
-
-  function init() {
+/* ══════════════════════════════════════════════════════════
+   1. SAFE GSAP WRAPPER
+══════════════════════════════════════════════════════════ */
+function initGSAP() {
+  if (typeof gsap === 'undefined') {
+    console.warn('LUMIÈRE: GSAP not loaded — animations disabled, content visible.');
+    return false;
+  }
+  if (typeof ScrollTrigger !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
-
-    initPageLoad();
-    initScrollAnimations();
-    initParallax();
-    initHeroFloat();
-    initCounters();
   }
+  // NOW it's safe to hide elements for animation
+  document.body.classList.add('gsap-ready');
+  return true;
+}
 
-  /* ── Hero entrance — runs once on page load ── */
-  function initPageLoad() {
-    const tl = gsap.timeline({ delay: 0.15 });
+/* ══════════════════════════════════════════════════════════
+   2. HERO MODULE
+   Floating bottle + parallax circles (CSS handles most of it)
+══════════════════════════════════════════════════════════ */
+function initHero() {
+  if (typeof gsap === 'undefined') return;
 
-    // Header drop-in
-    tl.from('.site-header', {
-      y: -80, opacity: 0,
-      duration: 0.9, ease: 'power3.out'
+  const float = document.getElementById('heroFloat');
+  if (!float) return;
+
+  // Gentle float — yoyo
+  gsap.to(float, {
+    y: -18,
+    duration: 3.8,
+    ease: 'power1.inOut',
+    yoyo: true,
+    repeat: -1
+  });
+
+  // Animate hero copy in on load
+  const tl = gsap.timeline({ delay: 0.1 });
+
+  tl.from('.hero-eyebrow', {
+    opacity: 0, y: 16,
+    duration: 0.7, ease: 'power2.out'
+  })
+  .from('.ht-word', {
+    opacity: 0, y: 30,
+    duration: 0.7, ease: 'power3.out',
+    stagger: 0.08
+  }, '-=0.3')
+  .from('.hero-desc', {
+    opacity: 0, y: 16,
+    duration: 0.6, ease: 'power2.out'
+  }, '-=0.3')
+  .from('.hero-actions', {
+    opacity: 0, y: 12,
+    duration: 0.6, ease: 'power2.out'
+  }, '-=0.3')
+  .from('.hero-product-wrap', {
+    opacity: 0, x: 40,
+    duration: 0.9, ease: 'power3.out'
+  }, '-=0.8')
+  .from('#heroCircle1', {
+    opacity: 0, scale: 0.6,
+    duration: 0.6, ease: 'back.out(2)'
+  }, '-=0.4')
+  .from('#heroCircle2', {
+    opacity: 0, scale: 0.6,
+    duration: 0.6, ease: 'back.out(2)'
+  }, '-=0.4')
+  .from('.hero-bg-text .hbt-line', {
+    opacity: 0, x: -30,
+    duration: 0.7, ease: 'power2.out',
+    stagger: 0.06
+  }, 0)
+  .from('.scroll-ind', {
+    opacity: 0, duration: 0.5
+  }, '-=0.2');
+}
+
+/* ══════════════════════════════════════════════════════════
+   3. SCROLL REVEAL
+   Uses ScrollTrigger batch for performance.
+   All targets must have .anim-hidden or .anim-hidden-x class
+   added by JS (not hardcoded in HTML) to stay safe.
+══════════════════════════════════════════════════════════ */
+function initScrollReveal() {
+  if (typeof ScrollTrigger === 'undefined') {
+    document.querySelectorAll('.anim-hidden, .anim-hidden-x').forEach(el => {
+      el.classList.remove('anim-hidden', 'anim-hidden-x');
     });
-
-    // Eyebrow fade-in
-    tl.to('.hero-eyebrow', {
-      opacity: 1, duration: 0.6, ease: 'power2.out'
-    }, '-=0.3');
-
-    // Headline lines unmask (translateY 100% → 0)
-    tl.to('.hero-headline .reveal-line', {
-      y: '0%',
-      duration: 0.9, ease: 'power3.out',
-      stagger: 0.12
-    }, '-=0.2');
-
-    // Description paragraph fades in
-    tl.to('.hero-desc', {
-      opacity: 1, duration: 0.7, ease: 'power2.out'
-    }, '-=0.4');
-
-    // CTA buttons
-    tl.to('.hero-cta', {
-      opacity: 1, duration: 0.6, ease: 'power2.out'
-    }, '-=0.35');
-
-    // Aside pills slide in from right (only when rendered)
-    tl.to('.aside-pill', {
-      opacity: 1, x: 0,
-      duration: 0.7, ease: 'power2.out',
-      stagger: 0.14
-    }, '-=0.4');
-
-    // Stats
-    tl.to('.aside-stats', {
-      opacity: 1, duration: 0.6, ease: 'power2.out'
-    }, '-=0.3');
-
-    // Scroll indicator
-    tl.from('.scroll-indicator', {
-      opacity: 0, duration: 0.5
-    }, '-=0.2');
+    return;
   }
 
-  /* ── ScrollTrigger reveal animations ── */
-  function initScrollAnimations() {
-
-    // Product cards — batch stagger (fade + rise)
-    ScrollTrigger.batch('.product-card', {
+  // Helper — add class then animate
+  function revealBatch(selector, options = {}) {
+    const els = document.querySelectorAll(selector);
+    if (!els.length) return;
+    ScrollTrigger.batch(selector, {
       onEnter: batch => {
         gsap.to(batch, {
-          opacity: 1, y: 0,
-          duration: 0.75, ease: 'power3.out',
-          stagger: 0.11
+          opacity: 1,
+          y: 0,
+          x: 0,
+          duration: options.duration || 0.75,
+          ease: options.ease || 'power3.out',
+          stagger: options.stagger || 0.1
         });
       },
       start: 'top 88%',
       once: true
     });
+  }
 
-    // Generic section headers
-    gsap.utils.toArray(
-      '.section-eyebrow, .section-title, .section-desc'
-    ).forEach(el => {
+  // Section headers
+  document.querySelectorAll('.sec-label, .sec-title, .sec-sub, .phil-title, .about-title, .contact-title, .whyus-title').forEach(el => {
+    if (typeof ScrollTrigger !== 'undefined') {
       gsap.from(el, {
         scrollTrigger: { trigger: el, start: 'top 90%', once: true },
         opacity: 0, y: 22,
-        duration: 0.8, ease: 'power3.out'
+        duration: 0.75, ease: 'power3.out'
       });
-    });
-
-    // Philosophy text column children
-    gsap.from('.philosophy-text-col > *', {
-      scrollTrigger: {
-        trigger: '.philosophy-section',
-        start: 'top 78%', once: true
-      },
-      opacity: 0, y: 28,
-      duration: 0.9, ease: 'power3.out',
-      stagger: 0.09
-    });
-
-    // Philosophy pillars — slide from left
-    gsap.from('.pillar', {
-      scrollTrigger: {
-        trigger: '.philosophy-pillars',
-        start: 'top 86%', once: true
-      },
-      opacity: 0, x: -22,
-      duration: 0.7, ease: 'power2.out',
-      stagger: 0.14
-    });
-
-    // Collection cards
-    ScrollTrigger.batch('.col-card', {
-      onEnter: batch => {
-        gsap.from(batch, {
-          opacity: 0, y: 22,
-          duration: 0.65, ease: 'power2.out',
-          stagger: 0.07
-        });
-      },
-      start: 'top 88%',
-      once: true
-    });
-
-    // About images
-    gsap.utils.toArray('.about-img-wrap').forEach((el, i) => {
+    } else {
       gsap.from(el, {
-        scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-        opacity: 0, y: 36,
-        duration: 0.9, delay: i * 0.14,
-        ease: 'power3.out'
-      });
-    });
-
-    // Why Us text
-    gsap.from('.whyus-text-block > *', {
-      scrollTrigger: {
-        trigger: '.whyus-section',
-        start: 'top 80%', once: true
-      },
-      opacity: 0, y: 24,
-      duration: 0.8, ease: 'power3.out',
-      stagger: 0.1
-    });
-
-    // Why Us stats
-    gsap.from('.whyus-stat', {
-      scrollTrigger: {
-        trigger: '.whyus-stats-col',
-        start: 'top 85%', once: true
-      },
-      opacity: 0, x: 20,
-      duration: 0.7, ease: 'power2.out',
-      stagger: 0.14
-    });
-
-    // Contact text
-    gsap.from('.contact-text > *', {
-      scrollTrigger: {
-        trigger: '.contact-section',
-        start: 'top 80%', once: true
-      },
-      opacity: 0, x: -28,
-      duration: 0.8, ease: 'power3.out',
-      stagger: 0.1
-    });
-
-    // Contact form fields
-    gsap.from('.form-field, .btn-submit', {
-      scrollTrigger: {
-        trigger: '.contact-form',
-        start: 'top 86%', once: true
-      },
-      opacity: 0, y: 18,
-      duration: 0.6, ease: 'power2.out',
-      stagger: 0.08
-    });
-
-    // Footer
-    gsap.from('.footer-brand, .footer-col, .footer-newsletter', {
-      scrollTrigger: {
-        trigger: '.site-footer',
-        start: 'top 86%', once: true
-      },
-      opacity: 0, y: 18,
-      duration: 0.7, ease: 'power2.out',
-      stagger: 0.1
-    });
-  }
-
-  /* ── Parallax — philosophy + why-us image columns ── */
-  function initParallax() {
-    gsap.utils.toArray('.parallax-img').forEach(el => {
-      const speed = parseFloat(el.dataset.speed ?? '-0.1');
-      gsap.to(el, {
-        y: () => el.offsetHeight * speed * 2,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: el.closest('section') ?? el,
-          start: 'top bottom',
-          end:   'bottom top',
-          scrub: 1.8
-        }
-      });
-    });
-  }
-
-  /* ── Continuous floating animation on hero product ── */
-  function initHeroFloat() {
-    const el = document.getElementById('heroFloat');
-    if (!el) return;
-
-    // Vertical float
-    gsap.to(el, {
-      y: -20,
-      duration: 3.5, ease: 'power1.inOut',
-      yoyo: true, repeat: -1
-    });
-
-    // Subtle rotation yoyo
-    gsap.to(el, {
-      rotation: 1.5,
-      duration: 5, ease: 'sine.inOut',
-      yoyo: true, repeat: -1
-    });
-  }
-
-  /* ── Animated counters (.stat-num and .wstat-num) ── */
-  function initCounters() {
-    document.querySelectorAll('.stat-num, .wstat-num').forEach(el => {
-      const target = parseInt(el.dataset.target ?? '0', 10);
-      ScrollTrigger.create({
-        trigger: el,
-        start: 'top 90%',
-        once: true,
-        onEnter: () => {
-          gsap.fromTo(
-            { val: 0 },
-            { val: target,
-              duration: 1.8, ease: 'power2.out',
-              onUpdate() { el.textContent = Math.round(this.targets()[0].val); }
-            }
-          );
-        }
-      });
-    });
-  }
-
-  /* ── Cart items stagger (called after drawer opens) ── */
-  function animateCartItems() {
-    gsap.to('.cart-item', {
-      opacity: 1, x: 0,
-      duration: 0.5, ease: 'power2.out',
-      stagger: 0.08, delay: 0.2
-    });
-  }
-
-  /* ── Filter transition (called by FilterModule) ── */
-  function animateFilter(hide, show) {
-    const tl = gsap.timeline();
-
-    if (hide.length) {
-      tl.to(hide, {
-        opacity: 0, scale: 0.93,
-        duration: 0.32, ease: 'power2.in',
-        stagger: 0.025,
-        onComplete: () => hide.forEach(el => (el.style.display = 'none'))
+        opacity: 0, y: 22,
+        duration: 0.75, ease: 'power3.out'
       });
     }
+  });
 
-    tl.call(() => {
-      show.forEach(el => (el.style.display = ''));
-      gsap.fromTo(show,
-        { opacity: 0, scale: 0.95, y: 10 },
-        { opacity: 1, scale: 1, y: 0,
-          duration: 0.42, ease: 'power2.out',
-          stagger: 0.045 }
-      );
+  // Product cards (top sales)
+  revealBatch('.p-card', { stagger: 0.11, duration: 0.75 });
+
+  // Store cards
+  revealBatch('.sg-card', { stagger: 0.09, duration: 0.65 });
+
+  // Philosophy images
+  document.querySelectorAll('.pi').forEach((el, i) => {
+    gsap.from(el, {
+      scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+      opacity: 0, y: 25,
+      duration: 0.75,
+      delay: i * 0.1,
+      ease: 'power2.out'
     });
-  }
+  });
 
-  return { init, animateCartItems, animateFilter };
-})();
+  // Philosophy pillars
+  gsap.from('.ppillar', {
+    scrollTrigger: { trigger: '.phil-pillars', start: 'top 86%', once: true },
+    opacity: 0, x: -20,
+    duration: 0.65, ease: 'power2.out',
+    stagger: 0.12
+  });
 
-
-/* ═══════════════════════════════════════════════════════════
-   2. CURSOR MODULE
-   ═══════════════════════════════════════════════════════════ */
-const CursorModule = (() => {
-  const dot  = document.getElementById('cursorDot');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  const lag = 0.14;
-
-  function init() {
-    // Hide on touch devices
-    if (window.matchMedia('(hover: none)').matches) return;
-    if (!dot || !ring) return;
-
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      gsap.set(dot, { x: mx, y: my });
+  // About images
+  document.querySelectorAll('.ai-wrap').forEach((el, i) => {
+    gsap.from(el, {
+      scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+      opacity: 0, y: 30,
+      duration: 0.8, delay: i * 0.12,
+      ease: 'power3.out'
     });
+  });
 
-    // Ring trails with lag
-    (function loop() {
-      rx += (mx - rx) * lag;
-      ry += (my - ry) * lag;
-      gsap.set(ring, { x: rx, y: ry });
-      requestAnimationFrame(loop);
-    })();
+  // Contact left
+  gsap.from('.contact-left > *', {
+    scrollTrigger: { trigger: '.contact-section', start: 'top 80%', once: true },
+    opacity: 0, x: -24,
+    duration: 0.75, ease: 'power3.out',
+    stagger: 0.1
+  });
 
-    // Hover states
-    const els = document.querySelectorAll(
-      'a, button, .filter-btn, .product-card, .col-card, .pillar, .magnetic, input, textarea, select'
-    );
-    els.forEach(el => {
-      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hovering'));
-      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hovering'));
+  // Contact form fields
+  gsap.from('.cf-field, .btn-send', {
+    scrollTrigger: { trigger: '.contact-form', start: 'top 85%', once: true },
+    opacity: 0, y: 16,
+    duration: 0.6, ease: 'power2.out',
+    stagger: 0.07
+  });
+
+  // Footer
+  gsap.from('.footer-brand, .fl-col, .footer-newsletter', {
+    scrollTrigger: { trigger: '.site-footer', start: 'top 87%', once: true },
+    opacity: 0, y: 16,
+    duration: 0.6, ease: 'power2.out',
+    stagger: 0.08
+  });
+
+  // Parallax — philosophy images
+  document.querySelectorAll('.pi').forEach(el => {
+    const speed = el.classList.contains('pi-1') ? -0.06
+                : el.classList.contains('pi-2') ? 0.05
+                : -0.04;
+    gsap.to(el.querySelector('img'), {
+      yPercent: speed * 40,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.phil-section',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1.5
+      }
     });
-  }
+  });
+}
 
-  return { init };
-})();
+/* ══════════════════════════════════════════════════════════
+   4. BURGER MODULE
+══════════════════════════════════════════════════════════ */
+function initBurger() {
+  const btn   = document.getElementById('burgerBtn');
+  const menu  = document.getElementById('mobileMenu');
+  const links = document.querySelectorAll('.m-link');
+  if (!btn || !menu) return;
 
+  let open = false;
 
-/* ═══════════════════════════════════════════════════════════
-   3. BURGER / MOBILE MENU MODULE
-   ═══════════════════════════════════════════════════════════ */
-const BurgerModule = (() => {
-  const burger     = document.getElementById('burgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const mobileLinks = document.querySelectorAll('.mobile-nav-link');
-  let isOpen = false;
-
-  function init() {
-    if (!burger || !mobileMenu) return;
-
-    burger.addEventListener('click', toggle);
-
-    // Close on nav link click
-    mobileLinks.forEach(link => link.addEventListener('click', close));
-
-    // Close on Escape
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && isOpen) close();
-    });
-  }
-
-  function toggle() {
-    isOpen ? close() : open();
-  }
-
-  function open() {
-    isOpen = true;
-    burger.classList.add('open');
-    burger.setAttribute('aria-expanded', 'true');
-    mobileMenu.classList.add('open');
+  function openMenu() {
+    open = true;
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    menu.classList.add('open');
     document.body.style.overflow = 'hidden';
-
-    // Stagger mobile links in
-    gsap.fromTo('.mobile-nav-link',
-      { opacity: 0, y: 24 },
-      { opacity: 1, y: 0,
-        duration: 0.5, ease: 'power3.out',
-        stagger: 0.07, delay: 0.25 }
-    );
+    if (typeof gsap !== 'undefined') {
+      gsap.fromTo('.m-link',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out', stagger: 0.07, delay: 0.2 }
+      );
+    }
   }
 
-  function close() {
-    isOpen = false;
-    burger.classList.remove('open');
-    burger.setAttribute('aria-expanded', 'false');
-    mobileMenu.classList.remove('open');
+  function closeMenu() {
+    open = false;
+    btn.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    menu.classList.remove('open');
     document.body.style.overflow = '';
   }
 
-  return { init };
-})();
+  btn.addEventListener('click', () => open ? closeMenu() : openMenu());
+  links.forEach(l => l.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && open) closeMenu(); });
+}
 
-
-/* ═══════════════════════════════════════════════════════════
-   4. CART MODULE
-   ═══════════════════════════════════════════════════════════ */
-const CartModule = (() => {
-
+/* ══════════════════════════════════════════════════════════
+   5. CART MODULE
+══════════════════════════════════════════════════════════ */
+function initCart() {
   /* ── State ── */
-  let cart = JSON.parse(localStorage.getItem('lumiere_cart') ?? '[]');
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem('lumiere_cart') || '[]'); } catch(e) {}
 
-  /* ── DOM refs ── */
+  /* ── DOM ── */
   const drawer    = document.getElementById('cartDrawer');
   const overlay   = document.getElementById('cartOverlay');
   const itemsEl   = document.getElementById('cartItems');
   const emptyEl   = document.getElementById('cartEmpty');
-  const footerEl  = document.getElementById('cartFooter');
+  const footEl    = document.getElementById('cartFoot');
   const badgeEl   = document.getElementById('cartBadge');
+  const subtotEl  = document.getElementById('cartSubtotal');
   const totalEl   = document.getElementById('cartTotal');
+  const countEl   = document.getElementById('cartCount');
 
-  function init() {
-    // Open / close bindings
-    document.getElementById('cartToggle')?.addEventListener('click', openCart);
-    document.getElementById('cartClose')?.addEventListener('click',  closeCart);
-    overlay?.addEventListener('click', closeCart);
+  if (!drawer) return;
 
-    // Delegated add-to-cart
-    document.addEventListener('click', e => {
-      const btn = e.target.closest('.btn-add-cart');
-      if (!btn) return;
-      const name  = btn.dataset.name;
-      const price = parseFloat(btn.dataset.price);
-      if (!name || isNaN(price)) return;
-      addItem(name, price);
-      showToast(`${name} added to cart ✦`);
-    });
-
-    // Header scroll class
-    window.addEventListener('scroll', () => {
-      document.getElementById('siteHeader')
-        ?.classList.toggle('scrolled', window.scrollY > 60);
-    }, { passive: true });
-
-    // Search overlay
-    initSearch();
-
-    // Contact form
-    document.getElementById('contactForm')?.addEventListener('submit', e => {
-      e.preventDefault();
-      showToast('Message sent — we\'ll be in touch ✦');
-      e.target.reset();
-    });
-
-    // Initial render
-    renderCart();
-    updateBadge();
-  }
-
-  /* ── Open / close ── */
+  /* ── Open / Close ── */
   function openCart() {
-    drawer?.classList.add('open');
-    overlay?.classList.add('open');
+    drawer.classList.add('open');
+    overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-    AnimationModule.animateCartItems();
+    // stagger items in
+    if (typeof gsap !== 'undefined') {
+      gsap.fromTo('.cd-item',
+        { opacity: 0, x: 20 },
+        { opacity: 1, x: 0, duration: 0.4, ease: 'power2.out', stagger: 0.07, delay: 0.15 }
+      );
+    }
   }
+
   function closeCart() {
-    drawer?.classList.remove('open');
-    overlay?.classList.remove('open');
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
     document.body.style.overflow = '';
   }
 
-  /* ── Add item ── */
+  document.getElementById('cartToggle')?.addEventListener('click', openCart);
+  document.getElementById('cartClose')?.addEventListener('click', closeCart);
+  overlay?.addEventListener('click', closeCart);
+
+  /* ── Add to Cart (delegated) ── */
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.btn-add-cart');
+    if (!btn) return;
+    const name  = btn.dataset.name;
+    const price = parseFloat(btn.dataset.price);
+    if (!name || isNaN(price)) return;
+    addItem(name, price);
+    showToast(`${name} added to cart ✦`);
+  });
+
   function addItem(name, price) {
     const ex = cart.find(i => i.name === name);
-    if (ex) { ex.qty++; }
-    else { cart.push({ id: Date.now(), name, price, qty: 1 }); }
-    save(); renderCart(); updateBadge();
-  }
-
-  /* ── Render ── */
-  function renderCart() {
-    itemsEl.querySelectorAll('.cart-item').forEach(el => el.remove());
-
-    if (!cart.length) {
-      emptyEl.style.display  = 'flex';
-      footerEl.style.display = 'none';
-      return;
-    }
-    emptyEl.style.display  = 'none';
-    footerEl.style.display = 'block';
-
-    let total = 0;
-    cart.forEach(item => {
-      total += item.price * item.qty;
-      itemsEl.appendChild(buildItemEl(item));
-    });
-    if (totalEl) totalEl.textContent = `$${total.toLocaleString()}`;
-  }
-
-  function buildItemEl(item) {
-    const el = document.createElement('div');
-    el.className  = 'cart-item';
-    el.dataset.id = item.id;
-    el.innerHTML  = `
-      <div class="cart-item-img"></div>
-      <div>
-        <p class="cart-item-name">${item.name}</p>
-        <p class="cart-item-price">$${item.price}</p>
-        <div class="qty-control">
-          <button class="qty-btn minus" aria-label="Decrease quantity">−</button>
-          <span   class="qty-num">${item.qty}</span>
-          <button class="qty-btn plus"  aria-label="Increase quantity">+</button>
-        </div>
-      </div>
-      <button class="cart-item-remove" aria-label="Remove ${item.name} from cart">✕</button>
-    `;
-    el.querySelector('.plus') .addEventListener('click', () => changeQty(item.id,  1));
-    el.querySelector('.minus').addEventListener('click', () => changeQty(item.id, -1));
-    el.querySelector('.cart-item-remove').addEventListener('click', () => removeItem(item.id));
-    return el;
-  }
-
-  /* ── Quantity / remove ── */
-  function changeQty(id, delta) {
-    const item = cart.find(i => i.id === id);
-    if (!item) return;
-    item.qty += delta;
-    if (item.qty <= 0) removeItem(id);
-    else { save(); renderCart(); updateBadge(); }
+    if (ex) ex.qty++;
+    else cart.push({ id: Date.now(), name, price, qty: 1 });
+    save(); render(); updateBadge();
   }
 
   function removeItem(id) {
     const idx = cart.findIndex(i => i.id === id);
     if (idx === -1) return;
     const el = itemsEl.querySelector(`[data-id="${id}"]`);
-    if (el) {
+    if (el && typeof gsap !== 'undefined') {
       gsap.to(el, {
         opacity: 0, x: 30, height: 0, paddingTop: 0, paddingBottom: 0,
-        duration: 0.35, ease: 'power2.in',
-        onComplete: () => {
-          cart.splice(idx, 1);
-          save(); renderCart(); updateBadge();
-        }
+        duration: 0.3, ease: 'power2.in',
+        onComplete: () => { cart.splice(idx, 1); save(); render(); updateBadge(); }
       });
     } else {
       cart.splice(idx, 1);
-      save(); renderCart(); updateBadge();
+      save(); render(); updateBadge();
     }
   }
 
-  /* ── Badge ── */
+  function changeQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) removeItem(id);
+    else { save(); render(); updateBadge(); }
+  }
+
+  /* ── Render ── */
+  function render() {
+    itemsEl.querySelectorAll('.cd-item').forEach(el => el.remove());
+
+    if (!cart.length) {
+      emptyEl.style.display = 'flex';
+      footEl.style.display  = 'none';
+      return;
+    }
+    emptyEl.style.display = 'none';
+    footEl.style.display  = 'block';
+
+    let total = 0;
+    cart.forEach(item => {
+      total += item.price * item.qty;
+      itemsEl.appendChild(buildItem(item));
+    });
+
+    if (subtotEl) subtotEl.textContent = '$' + total.toLocaleString();
+    if (totalEl)  totalEl.textContent  = '$' + total.toLocaleString();
+    if (countEl)  countEl.textContent  = `(${cart.reduce((a,i) => a + i.qty, 0)})`;
+  }
+
+  function buildItem(item) {
+    const el = document.createElement('div');
+    el.className  = 'cd-item';
+    el.dataset.id = item.id;
+    el.innerHTML = `
+      <div class="cd-item-img"></div>
+      <div>
+        <p class="cd-item-name">${item.name}</p>
+        <p class="cd-item-price">$${item.price}</p>
+        <div class="qty-row">
+          <button class="qb minus" aria-label="Decrease">−</button>
+          <span class="qn">${item.qty}</span>
+          <button class="qb plus"  aria-label="Increase">+</button>
+        </div>
+      </div>
+      <button class="cd-rm" aria-label="Remove">✕</button>
+    `;
+    el.querySelector('.plus') .addEventListener('click', () => changeQty(item.id,  1));
+    el.querySelector('.minus').addEventListener('click', () => changeQty(item.id, -1));
+    el.querySelector('.cd-rm').addEventListener('click', () => removeItem(item.id));
+    return el;
+  }
+
   function updateBadge() {
     const n = cart.reduce((a, i) => a + i.qty, 0);
     if (badgeEl) {
       badgeEl.textContent = n;
-      badgeEl.classList.toggle('visible', n > 0);
+      badgeEl.classList.toggle('show', n > 0);
     }
   }
 
   function save() {
-    localStorage.setItem('lumiere_cart', JSON.stringify(cart));
+    try { localStorage.setItem('lumiere_cart', JSON.stringify(cart)); } catch(e) {}
   }
 
-  /* ── Search overlay ── */
-  function initSearch() {
-    const overlay = document.getElementById('searchOverlay');
-    const toggle  = document.getElementById('searchToggle');
-    const close   = document.getElementById('searchClose');
-    const input   = document.getElementById('searchInput');
+  // Init
+  render(); updateBadge();
+}
 
-    toggle?.addEventListener('click', () => {
-      overlay?.classList.add('open');
-      overlay?.setAttribute('aria-hidden', 'false');
-      setTimeout(() => input?.focus(), 400);
-    });
+/* ══════════════════════════════════════════════════════════
+   6. FILTER MODULE — Store section
+══════════════════════════════════════════════════════════ */
+function initFilter() {
+  const btns  = document.querySelectorAll('.fb');
+  const cards = document.querySelectorAll('.sg-card');
+  if (!btns.length) return;
 
-    const closeSearch = () => {
-      overlay?.classList.remove('open');
-      overlay?.setAttribute('aria-hidden', 'true');
-    };
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
 
-    close?.addEventListener('click', closeSearch);
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeSearch();
-    });
-  }
+      const filter = btn.dataset.filter;
+      const hide = [], show = [];
+      cards.forEach(c => (filter === 'all' || c.dataset.cat === filter ? show : hide).push(c));
 
-  return { init };
-})();
-
-
-/* ═══════════════════════════════════════════════════════════
-   5. FILTER MODULE
-   ═══════════════════════════════════════════════════════════ */
-const FilterModule = (() => {
-  function init() {
-    const btns  = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.col-card');
-
-    btns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const filter = btn.dataset.filter;
-
-        // Active state
-        btns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        // Partition
-        const hide = [];
-        const show = [];
-        cards.forEach(card => {
-          const match = filter === 'all' || card.dataset.cat === filter;
-          (match ? show : hide).push(card);
+      if (typeof gsap !== 'undefined') {
+        const tl = gsap.timeline();
+        if (hide.length) {
+          tl.to(hide, {
+            opacity: 0, scale: 0.94, y: 8,
+            duration: 0.28, ease: 'power2.in',
+            stagger: 0.02,
+            onComplete: () => hide.forEach(el => (el.style.display = 'none'))
+          });
+        }
+        tl.call(() => {
+          show.forEach(el => (el.style.display = ''));
+          gsap.fromTo(show,
+            { opacity: 0, scale: 0.96, y: 10 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.38, ease: 'power2.out', stagger: 0.04 }
+          );
         });
-
-        AnimationModule.animateFilter(hide, show);
-      });
-    });
-  }
-
-  return { init };
-})();
-
-
-/* ═══════════════════════════════════════════════════════════
-   6. MAGNETIC BUTTONS
-   ═══════════════════════════════════════════════════════════ */
-function initMagnetic() {
-  // Skip on touch devices
-  if (window.matchMedia('(hover: none)').matches) return;
-
-  document.querySelectorAll('.magnetic').forEach(el => {
-    const strength = 0.32;
-
-    el.addEventListener('mousemove', e => {
-      const r  = el.getBoundingClientRect();
-      const cx = r.left + r.width  / 2;
-      const cy = r.top  + r.height / 2;
-      gsap.to(el, {
-        x: (e.clientX - cx) * strength,
-        y: (e.clientY - cy) * strength,
-        duration: 0.3, ease: 'power2.out'
-      });
-    });
-
-    el.addEventListener('mouseleave', () => {
-      gsap.to(el, {
-        x: 0, y: 0,
-        duration: 0.55, ease: 'elastic.out(1, 0.5)'
-      });
+      } else {
+        hide.forEach(el => (el.style.display = 'none'));
+        show.forEach(el => (el.style.display = ''));
+      }
     });
   });
 }
 
+/* ══════════════════════════════════════════════════════════
+   7. CUSTOM CURSOR (desktop only)
+══════════════════════════════════════════════════════════ */
+function initCursor() {
+  // Only on non-touch devices
+  if (!window.matchMedia('(pointer: fine)').matches) return;
 
-/* ═══════════════════════════════════════════════════════════
+  const dot  = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  if (!dot || !ring) return;
+
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    if (typeof gsap !== 'undefined') gsap.set(dot, { x: mx, y: my });
+    else { dot.style.left = mx + 'px'; dot.style.top = my + 'px'; }
+  });
+
+  // Ring lags behind
+  (function loopRing() {
+    rx += (mx - rx) * 0.13;
+    ry += (my - ry) * 0.13;
+    if (typeof gsap !== 'undefined') gsap.set(ring, { x: rx, y: ry });
+    else { ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; }
+    requestAnimationFrame(loopRing);
+  })();
+
+  // Hover states
+  document.querySelectorAll('a, button, .p-card, .sg-card, .fb, .ppillar, input, textarea').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('c-hover'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('c-hover'));
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   8. SEARCH MODULE
+══════════════════════════════════════════════════════════ */
+function initSearch() {
+  const overlay = document.getElementById('searchOverlay');
+  const toggle  = document.getElementById('searchToggle');
+  const close   = document.getElementById('searchClose');
+  const input   = document.getElementById('searchInput');
+  if (!overlay || !toggle) return;
+
+  function open() {
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    setTimeout(() => input?.focus(), 350);
+  }
+  function close_() {
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+  }
+
+  toggle.addEventListener('click', open);
+  close?.addEventListener('click', close_);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close_(); });
+}
+
+/* ══════════════════════════════════════════════════════════
+   HEADER SCROLL CLASS
+══════════════════════════════════════════════════════════ */
+function initHeader() {
+  const header = document.getElementById('siteHeader');
+  if (!header) return;
+  const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 50);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // run on load
+}
+
+/* ══════════════════════════════════════════════════════════
+   CONTACT FORM
+══════════════════════════════════════════════════════════ */
+function initContactForm() {
+  const form = document.getElementById('contactForm');
+  form?.addEventListener('submit', e => {
+    e.preventDefault();
+    showToast('Message sent — we\'ll be in touch ✦');
+    form.reset();
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   NEWSLETTER FORM
+══════════════════════════════════════════════════════════ */
+function initNewsletter() {
+  document.querySelectorAll('.nl-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = btn.previousElementSibling;
+      if (input && input.value.includes('@')) {
+        showToast('Subscribed! Welcome to the Lumière Letter ✦');
+        input.value = '';
+      } else {
+        showToast('Please enter a valid email address.');
+      }
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
    TOAST UTILITY
-   ═══════════════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════════ */
 let _toastTimer;
 function showToast(msg) {
   const el = document.getElementById('toast');
@@ -660,18 +563,49 @@ function showToast(msg) {
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(() => el.classList.remove('show'), 3300);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
 }
 
+/* ══════════════════════════════════════════════════════════
+   SMOOTH ANCHOR SCROLL
+   Overrides default browser jump for nav links
+══════════════════════════════════════════════════════════ */
+function initSmoothScroll() {
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const id = link.getAttribute('href').slice(1);
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      const hhPx = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hh')) || 72;
+      const top  = target.getBoundingClientRect().top + window.scrollY - hhPx;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+}
 
-/* ═══════════════════════════════════════════════════════════
-   BOOTSTRAP
-   ═══════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   BOOTSTRAP — DOMContentLoaded
+══════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  AnimationModule.init();   // GSAP animations
-  CursorModule.init();      // Custom cursor
-  BurgerModule.init();      // Mobile burger menu
-  CartModule.init();        // Cart drawer + Add-to-cart
-  FilterModule.init();      // Collection filter tabs
-  initMagnetic();           // Magnetic button effect
+  // 1. Init GSAP (marks body.gsap-ready if available)
+  const gsapOk = initGSAP();
+
+  // 2. UI modules (no GSAP dependency)
+  initHeader();
+  initBurger();
+  initCart();
+  initFilter();
+  initSearch();
+  initContactForm();
+  initNewsletter();
+  initSmoothScroll();
+  initCursor();
+
+  // 3. Animations (GSAP dependent — gracefully degrade)
+  if (gsapOk) {
+    initHero();
+    initScrollReveal();
+  }
 });
