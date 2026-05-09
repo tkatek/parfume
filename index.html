@@ -6,486 +6,551 @@
   <title>LUMIÈRE — Luxury Perfumery</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="index.css" />
 </head>
 <body>
 
   <!-- Custom Cursor -->
-  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-dot"  id="cursorDot"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- ============================================================
-       HEADER / NAVIGATION
-  ============================================================ -->
+  <!-- ══════════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════════ -->
   <header class="site-header" id="siteHeader">
     <div class="header-inner">
-      <a href="#" class="logo magnetic">LUMIÈRE</a>
-      <nav class="main-nav">
-        <a href="#home" class="nav-link">Home</a>
-        <a href="#shop" class="nav-link">Shop</a>
-        <a href="#philosophy" class="nav-link">About</a>
-        <a href="#contact" class="nav-link">Contact</a>
+      <a href="#home" class="logo">LUMIÈRE</a>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="#home"       class="nav-link">Home</a>
+        <a href="#topsales"   class="nav-link">Top Sales</a>
+        <a href="#about"      class="nav-link">About</a>
+        <a href="#store"      class="nav-link">Store</a>
+        <a href="#contact"    class="nav-link">Contact</a>
       </nav>
+
       <div class="header-actions">
-        <button class="icon-btn magnetic" id="searchToggle" aria-label="Search">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        </button>
-        <button class="icon-btn cart-btn magnetic" id="cartToggle" aria-label="Cart">
+        <button class="icon-btn cart-btn" id="cartToggle" aria-label="Cart">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
           <span class="cart-badge" id="cartBadge">0</span>
         </button>
+        <!-- Burger -->
+        <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
       </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <nav class="mobile-nav">
+        <a href="#home"     class="m-link">Home</a>
+        <a href="#topsales" class="m-link">Top Sales</a>
+        <a href="#about"    class="m-link">About</a>
+        <a href="#store"    class="m-link">Store</a>
+        <a href="#contact"  class="m-link">Contact</a>
+      </nav>
     </div>
   </header>
 
-  <!-- Search Overlay -->
-  <div class="search-overlay" id="searchOverlay">
+  <!-- Search overlay -->
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true">
     <button class="search-close" id="searchClose">✕</button>
-    <div class="search-content">
-      <p class="search-hint">What are you looking for?</p>
-      <input type="text" class="search-input" placeholder="Search fragrances…" id="searchInput" />
+    <div class="search-inner">
+      <p class="search-label">Search</p>
+      <input type="search" id="searchInput" class="search-field" placeholder="Fragrance name…" autocomplete="off"/>
     </div>
   </div>
 
-  <!-- ============================================================
-       HERO SECTION
-  ============================================================ -->
+  <!-- ══════════════════════════════════════════════
+       HERO — Editorial "NEW COLLECTION" style
+  ══════════════════════════════════════════════ -->
   <section class="hero" id="home">
-    <div class="hero-bg-gradient"></div>
 
-    <div class="hero-layout">
-      <!-- Left editorial text column -->
-      <div class="hero-text-col">
-        <div class="hero-eyebrow reveal-line">
-          <span>New Collection — 2025</span>
-        </div>
-        <h1 class="hero-headline">
-          <div class="line-mask"><span class="reveal-line">The Art</span></div>
-          <div class="line-mask"><span class="reveal-line italic">of Scent</span></div>
-          <div class="line-mask"><span class="reveal-line">Unveiled</span></div>
-        </h1>
-        <p class="hero-desc reveal-line">
-          Crafted for those who understand that<br>a fragrance is not worn — it is inhabited.
-        </p>
-        <div class="hero-cta reveal-line">
-          <a href="#shop" class="btn-primary magnetic">Explore Collection</a>
-          <a href="#philosophy" class="btn-ghost magnetic">Our Story</a>
-        </div>
+    <!-- Big stacked editorial text (background layer) -->
+    <div class="hero-bg-text" aria-hidden="true">
+      <span class="hbt-line">NEW</span>
+      <span class="hbt-line">COL</span>
+      <span class="hbt-line">LEC</span>
+      <span class="hbt-line">TION</span>
+    </div>
+
+    <!-- Gradient orb -->
+    <div class="hero-orb"></div>
+
+    <!-- Floating product image (centre-right) -->
+    <div class="hero-product-wrap" id="heroFloat">
+      <img src="images/a894bd558e5ee0685df8e54e4efe7e75.jpg" alt="LUMIÈRE Peachwood — hero perfume bottle on stone pedestal" class="hero-product-img" />
+      <div class="hero-product-glow"></div>
+    </div>
+
+    <!-- Small circle ingredient overlays -->
+    <div class="hero-circle-img top" id="heroCircle1">
+      <img src="images/a7089cf8b8f8b35f8d8dfe760cd6ffef.jpg" alt="Magnolia blossom — hero ingredient" />
+    </div>
+    <div class="hero-circle-img bottom" id="heroCircle2">
+      <img src="images/d60c065bc1a5e3cef38e782061f9bca0.jpg" alt="Peach slice with magnolia — hero ingredient" />
+    </div>
+
+    <!-- Left editorial copy -->
+    <div class="hero-copy">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-line"></span>
+        <span>New Collection — 2025</span>
       </div>
 
-      <!-- Center floating product image -->
-      <div class="hero-product-wrap">
-        <div class="hero-product-float" id="heroFloat">
-          <div class="hero-product-img img-placeholder"></div>
-          <div class="hero-product-badge">
-            <span>Bestseller</span>
-          </div>
-        </div>
-        <div class="hero-circle-accent"></div>
-      </div>
+      <h1 class="hero-title">
+        <span class="ht-word">The</span>
+        <span class="ht-word italic">Art</span>
+        <span class="ht-word">of</span>
+        <br/>
+        <span class="ht-word italic gold">Scent</span>
+        <span class="ht-word">Unveiled</span>
+      </h1>
 
-      <!-- Right floating ingredient thumbnails -->
-      <div class="hero-aside">
-        <div class="aside-pill floating-delay-1">
-          <div class="pill-img img-placeholder-sm"></div>
-          <div>
-            <p class="pill-name">Soleil d'Or</p>
-            <p class="pill-sub">Floral · Warm</p>
-          </div>
-        </div>
-        <div class="aside-pill floating-delay-2">
-          <div class="pill-img img-placeholder-sm"></div>
-          <div>
-            <p class="pill-name">Forêt Noire</p>
-            <p class="pill-sub">Woody · Deep</p>
-          </div>
-        </div>
-        <div class="aside-stats">
-          <div class="stat">
-            <span class="stat-num" data-target="87">0</span><span>+</span>
-            <p>Ingredients</p>
-          </div>
-          <div class="stat">
-            <span class="stat-num" data-target="14">0</span><span></span>
-            <p>Collections</p>
-          </div>
-        </div>
+      <p class="hero-desc">
+        Peachwood is a refined fragrance where the delicate touch of magnolia and the juiciness of peach blend with the warm depth of woody notes, creating a harmonious and memorable trail that embodies elegance and the power of nature.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#topsales" class="btn-dark">Explore Collection</a>
+        <a href="#about"    class="btn-line">Our Story →</a>
       </div>
     </div>
 
     <!-- Scroll indicator -->
-    <div class="scroll-indicator">
-      <div class="scroll-line"></div>
+    <div class="scroll-ind">
+      <div class="scroll-track"><div class="scroll-thumb"></div></div>
       <span>Scroll</span>
     </div>
   </section>
 
-  <!-- ============================================================
-       MARQUEE STRIP
-  ============================================================ -->
-  <div class="marquee-strip">
-    <div class="marquee-track">
-      <span>Haute Parfumerie</span><span class="dot">✦</span>
-      <span>Handcrafted in France</span><span class="dot">✦</span>
-      <span>Rare Ingredients</span><span class="dot">✦</span>
-      <span>Timeless Elegance</span><span class="dot">✦</span>
-      <span>Haute Parfumerie</span><span class="dot">✦</span>
-      <span>Handcrafted in France</span><span class="dot">✦</span>
-      <span>Rare Ingredients</span><span class="dot">✦</span>
-      <span>Timeless Elegance</span><span class="dot">✦</span>
+  <!-- ══════════════════════════════════════════════
+       MARQUEE
+  ══════════════════════════════════════════════ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-inner">
+      <span>Haute Parfumerie</span><em>✦</em>
+      <span>Handcrafted in France</span><em>✦</em>
+      <span>Rare Ingredients</span><em>✦</em>
+      <span>Timeless Elegance</span><em>✦</em>
+      <span>Haute Parfumerie</span><em>✦</em>
+      <span>Handcrafted in France</span><em>✦</em>
+      <span>Rare Ingredients</span><em>✦</em>
+      <span>Timeless Elegance</span><em>✦</em>
     </div>
   </div>
 
-  <!-- ============================================================
-       BEST SELLERS / SHOP GRID
-  ============================================================ -->
-  <section class="section shop-section" id="shop">
-    <div class="section-header">
-      <p class="section-eyebrow">Curated Essentials</p>
-      <h2 class="section-title">Top <em>Sellers</em></h2>
-      <p class="section-desc">Each bottle is a story waiting to be told on your skin.</p>
+  <!-- ══════════════════════════════════════════════
+       TOP SALES — 6 cards
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="topsales">
+    <div class="sec-head">
+      <div class="sec-label">Customer Favorites</div>
+      <h2 class="sec-title">Top <em>Sales</em></h2>
+      <p class="sec-sub">Each bottle is a story waiting to be told on your skin.</p>
     </div>
 
-    <div class="product-grid" id="shopGrid">
+    <div class="products-grid" id="productsGrid">
 
-      <div class="product-card" data-category="floral">
-        <div class="card-img img-placeholder">
-          <div class="card-overlay">
+      <article class="p-card">
+        <div class="p-card-img">
+          <img src="images/0c1fb045e0d875e0d13764f81d74937a.jpg" alt="Rose Lumière perfume bottle" />
+          <span class="p-badge">Bestseller</span>
+          <div class="p-hover-btn">
             <button class="btn-add-cart" data-name="Rose Lumière" data-price="185">Add to Cart</button>
           </div>
-          <div class="card-tag">Bestseller</div>
         </div>
-        <div class="card-info">
-          <h3 class="card-name">Rose Lumière</h3>
-          <p class="card-notes">Bulgarian Rose · White Musk · Sandalwood</p>
-          <div class="card-footer">
-            <span class="card-price">$185</span>
-            <div class="card-rating">★★★★★</div>
+        <div class="p-card-body">
+          <h3>Rose Lumière</h3>
+          <p>Bulgarian Rose · White Musk · Sandalwood</p>
+          <div class="p-card-foot">
+            <span class="p-price">$185</span>
+            <span class="p-stars">★★★★★</span>
           </div>
         </div>
-      </div>
+      </article>
 
-      <div class="product-card" data-category="woody">
-        <div class="card-img img-placeholder">
-          <div class="card-overlay">
+      <article class="p-card">
+        <div class="p-card-img">
+          <img src="images/two.jpg" alt="Cèdre Mystique perfume bottle" />
+          <div class="p-hover-btn">
             <button class="btn-add-cart" data-name="Cèdre Mystique" data-price="210">Add to Cart</button>
           </div>
         </div>
-        <div class="card-info">
-          <h3 class="card-name">Cèdre Mystique</h3>
-          <p class="card-notes">Cedarwood · Vetiver · Amber</p>
-          <div class="card-footer">
-            <span class="card-price">$210</span>
-            <div class="card-rating">★★★★★</div>
+        <div class="p-card-body">
+          <h3>Cèdre Mystique</h3>
+          <p>Cedarwood · Vetiver · Amber</p>
+          <div class="p-card-foot">
+            <span class="p-price">$210</span>
+            <span class="p-stars">★★★★★</span>
           </div>
         </div>
-      </div>
+      </article>
 
-      <div class="product-card" data-category="fresh">
-        <div class="card-img img-placeholder">
-          <div class="card-overlay">
+      <article class="p-card">
+        <div class="p-card-img">
+          <img src="images/tree.jpg" alt="Aube Fraîche perfume bottle" />
+          <span class="p-badge new">New</span>
+          <div class="p-hover-btn">
             <button class="btn-add-cart" data-name="Aube Fraîche" data-price="165">Add to Cart</button>
           </div>
-          <div class="card-tag">New</div>
         </div>
-        <div class="card-info">
-          <h3 class="card-name">Aube Fraîche</h3>
-          <p class="card-notes">Neroli · Sea Spray · Bergamot</p>
-          <div class="card-footer">
-            <span class="card-price">$165</span>
-            <div class="card-rating">★★★★☆</div>
+        <div class="p-card-body">
+          <h3>Aube Fraîche</h3>
+          <p>Neroli · Sea Spray · Bergamot</p>
+          <div class="p-card-foot">
+            <span class="p-price">$165</span>
+            <span class="p-stars">★★★★☆</span>
           </div>
         </div>
-      </div>
+      </article>
 
-      <div class="product-card" data-category="oriental">
-        <div class="card-img img-placeholder">
-          <div class="card-overlay">
+      <article class="p-card">
+        <div class="p-card-img">
+          <img src="images/for.jpg" alt="Encens Doré perfume bottle" />
+          <div class="p-hover-btn">
             <button class="btn-add-cart" data-name="Encens Doré" data-price="240">Add to Cart</button>
           </div>
         </div>
-        <div class="card-info">
-          <h3 class="card-name">Encens Doré</h3>
-          <p class="card-notes">Frankincense · Oud · Saffron</p>
-          <div class="card-footer">
-            <span class="card-price">$240</span>
-            <div class="card-rating">★★★★★</div>
+        <div class="p-card-body">
+          <h3>Encens Doré</h3>
+          <p>Frankincense · Oud · Saffron</p>
+          <div class="p-card-foot">
+            <span class="p-price">$240</span>
+            <span class="p-stars">★★★★★</span>
           </div>
         </div>
-      </div>
+      </article>
 
-      <div class="product-card" data-category="floral">
-        <div class="card-img img-placeholder">
-          <div class="card-overlay">
+      <article class="p-card">
+        <div class="p-card-img">
+          <img src="images/five.jpg" alt="Jasmin Étoile perfume bottle" />
+          <div class="p-hover-btn">
             <button class="btn-add-cart" data-name="Jasmin Étoile" data-price="195">Add to Cart</button>
           </div>
         </div>
-        <div class="card-info">
-          <h3 class="card-name">Jasmin Étoile</h3>
-          <p class="card-notes">Jasmine · Ylang-Ylang · Vanilla</p>
-          <div class="card-footer">
-            <span class="card-price">$195</span>
-            <div class="card-rating">★★★★★</div>
+        <div class="p-card-body">
+          <h3>Jasmin Étoile</h3>
+          <p>Jasmine · Ylang-Ylang · Vanilla</p>
+          <div class="p-card-foot">
+            <span class="p-price">$195</span>
+            <span class="p-stars">★★★★★</span>
           </div>
         </div>
-      </div>
+      </article>
 
-      <div class="product-card" data-category="woody">
-        <div class="card-img img-placeholder">
-          <div class="card-overlay">
+      <article class="p-card">
+        <div class="p-card-img">
+          <img src="images/six.jpg" alt="Vétiver Royal perfume bottle" />
+          <span class="p-badge limited">Limited</span>
+          <div class="p-hover-btn">
             <button class="btn-add-cart" data-name="Vétiver Royal" data-price="225">Add to Cart</button>
           </div>
-          <div class="card-tag">Limited</div>
         </div>
-        <div class="card-info">
-          <h3 class="card-name">Vétiver Royal</h3>
-          <p class="card-notes">Vetiver · Patchouli · Leather</p>
-          <div class="card-footer">
-            <span class="card-price">$225</span>
-            <div class="card-rating">★★★★★</div>
+        <div class="p-card-body">
+          <h3>Vétiver Royal</h3>
+          <p>Vetiver · Patchouli · Leather</p>
+          <div class="p-card-foot">
+            <span class="p-price">$225</span>
+            <span class="p-stars">★★★★★</span>
           </div>
         </div>
-      </div>
+      </article>
 
     </div>
 
-    <div class="section-cta">
-      <a href="full-collection.html" class="btn-outline magnetic">View Full Collection →</a>
+    <div class="sec-cta">
+      <a href="full-collection.html" class="btn-collection">
+        <span>See Full Collection</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </section>
 
-  <!-- ============================================================
-       PHILOSOPHY / WHY US
-  ============================================================ -->
-  <section class="section philosophy-section" id="philosophy">
-    <div class="philosophy-layout">
-      <div class="philosophy-text-col">
-        <p class="section-eyebrow">The Philosophy</p>
-        <h2 class="philosophy-title">Scent is Memory<br><em>Made Eternal</em></h2>
-        <p class="philosophy-body">
-          We believe fragrance is the most intimate form of self-expression. At LUMIÈRE, every drop is a conversation between the ancient art of perfumery and the unbounded spirit of the modern world.
-        </p>
-        <p class="philosophy-body">
-          Our master perfumers travel the globe — from the jasmine fields of Grasse to the oud forests of Cambodia — to source only the rarest, most exceptional raw materials.
-        </p>
-        <div class="philosophy-pillars">
-          <div class="pillar">
-            <span class="pillar-icon">◈</span>
-            <h4>Rare Ingredients</h4>
-            <p>Sourced from over 40 countries across 6 continents.</p>
+  <!-- ══════════════════════════════════════════════
+       PHILOSOPHY — ingredients editorial
+  ══════════════════════════════════════════════ -->
+  <section class="section phil-section" id="philosophy">
+    <div class="phil-layout">
+
+      <div class="phil-text">
+        <div class="sec-label">Our Philosophy</div>
+        <h2 class="phil-title">Nature.<br><em>Crafted.</em><br>Elevated.</h2>
+        <p class="phil-body">We believe the finest scents come from the world's most precious natural ingredients, blended with artisanal mastery and a commitment to purity.</p>
+        <p class="phil-body">From jasmine fields of Grasse to the oud forests of Cambodia — every raw material is chosen with reverence.</p>
+        <div class="phil-pillars">
+          <div class="ppillar">
+            <span>◈</span>
+            <div>
+              <strong>Rare Ingredients</strong>
+              <p>40+ countries, 6 continents</p>
+            </div>
           </div>
-          <div class="pillar">
-            <span class="pillar-icon">◈</span>
-            <h4>Master Craftsmanship</h4>
-            <p>Each fragrance aged for a minimum of 6 months.</p>
+          <div class="ppillar">
+            <span>◈</span>
+            <div>
+              <strong>Master Craftsmanship</strong>
+              <p>Aged minimum 6 months</p>
+            </div>
           </div>
-          <div class="pillar">
-            <span class="pillar-icon">◈</span>
-            <h4>Sustainable Luxury</h4>
-            <p>Carbon-neutral since 2022. Nature preserved.</p>
+          <div class="ppillar">
+            <span>◈</span>
+            <div>
+              <strong>Sustainable Luxury</strong>
+              <p>Carbon-neutral since 2022</p>
+            </div>
           </div>
         </div>
       </div>
-      <div class="philosophy-images-col">
-        <div class="phil-img-large img-placeholder parallax-img" data-speed="-0.15"></div>
-        <div class="phil-img-small img-placeholder parallax-img" data-speed="0.1"></div>
-        <div class="phil-img-tiny img-placeholder parallax-img" data-speed="-0.08"></div>
+
+      <div class="phil-imgs">
+        <div class="pi pi-1">
+          <img src="images/Gemini_Generated_Image_j29mnj29mnj29mnj.png" alt="White flower — Flowers: Delicate &amp; Rare" />
+          <div class="pi-label"><span>FLOWERS</span><small>Delicate &amp; Rare</small></div>
+        </div>
+        <div class="pi pi-2">
+          <img src="images/pexels-didsss-2508558.jpg" alt="Driftwood — Woods: Warm &amp; Grounded" />
+          <div class="pi-label"><span>WOODS</span><small>Warm &amp; Grounded</small></div>
+        </div>
+        <div class="pi pi-3">
+          <img src="images/752a890bd4509b7aa10751126981760b.jpg" alt="Amber resin — Resins: Deep &amp; Addictive" />
+          <div class="pi-label"><span>RESINS</span><small>Deep &amp; Addictive</small></div>
+        </div>
       </div>
+
     </div>
   </section>
 
-  <!-- ============================================================
-       FULL COLLECTION WITH FILTER
-  ============================================================ -->
-  <section class="section collection-section" id="collection">
-    <div class="section-header">
-      <p class="section-eyebrow">The Atelier</p>
-      <h2 class="section-title">Full <em>Collection</em></h2>
+  <!-- ══════════════════════════════════════════════
+       STORE — 6 curated cards + "See Full Collection" CTA
+  ══════════════════════════════════════════════ -->
+  <section class="section store-section" id="store">
+    <div class="sec-head">
+      <div class="sec-label">The Collection</div>
+      <h2 class="sec-title">Find Your <em>Signature</em></h2>
     </div>
 
+    <!-- Filter bar -->
     <div class="filter-bar">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="floral">Floral</button>
-      <button class="filter-btn" data-filter="woody">Woody</button>
-      <button class="filter-btn" data-filter="fresh">Fresh</button>
-      <button class="filter-btn" data-filter="oriental">Oriental</button>
+      <button class="fb active" data-filter="all">All</button>
+      <button class="fb" data-filter="floral">Floral</button>
+      <button class="fb" data-filter="woody">Woody</button>
+      <button class="fb" data-filter="fresh">Fresh</button>
+      <button class="fb" data-filter="oriental">Oriental</button>
     </div>
 
-    <div class="collection-grid" id="collectionGrid">
+    <div class="store-grid" id="storeGrid">
 
-      <div class="col-card" data-cat="floral">
-        <div class="col-card-img img-placeholder"></div>
-        <p class="col-tag">Floral</p>
-        <h4>Rose Lumière</h4>
-        <span>$185</span>
-        <button class="btn-add-cart col-atc" data-name="Rose Lumière" data-price="185">+ Add</button>
+      <div class="sg-card" data-cat="floral">
+        <div class="sg-img"><img src="images/mal.jpg" alt="Rose Lumière" /></div>
+        <div class="sg-body">
+          <div class="sg-top">
+            <span class="sg-cat">Floral</span>
+            <span class="sg-price">$185</span>
+          </div>
+          <h4>Rose Lumière</h4>
+          <p>Bulgarian Rose · White Musk · Sandalwood</p>
+          <button class="btn-add-cart sg-atc" data-name="Rose Lumière" data-price="185">Add to Cart +</button>
+        </div>
       </div>
 
-      <div class="col-card" data-cat="woody">
-        <div class="col-card-img img-placeholder"></div>
-        <p class="col-tag">Woody</p>
-        <h4>Cèdre Mystique</h4>
-        <span>$210</span>
-        <button class="btn-add-cart col-atc" data-name="Cèdre Mystique" data-price="210">+ Add</button>
+      <div class="sg-card" data-cat="woody">
+        <div class="sg-img"><img src="images/ss.jpg" alt="Cèdre Mystique" /></div>
+        <div class="sg-body">
+          <div class="sg-top">
+            <span class="sg-cat">Woody</span>
+            <span class="sg-price">$210</span>
+          </div>
+          <h4>Cèdre Mystique</h4>
+          <p>Cedarwood · Vetiver · Amber</p>
+          <button class="btn-add-cart sg-atc" data-name="Cèdre Mystique" data-price="210">Add to Cart +</button>
+        </div>
       </div>
 
-      <div class="col-card" data-cat="fresh">
-        <div class="col-card-img img-placeholder"></div>
-        <p class="col-tag">Fresh</p>
-        <h4>Aube Fraîche</h4>
-        <span>$165</span>
-        <button class="btn-add-cart col-atc" data-name="Aube Fraîche" data-price="165">+ Add</button>
+      <div class="sg-card" data-cat="fresh">
+        <div class="sg-img"><img src="images/a7089cf8b8f8b35f8d8dfe760cd6ffef.jpg" alt="Aube Fraîche" /></div>
+        <div class="sg-body">
+          <div class="sg-top">
+            <span class="sg-cat">Fresh</span>
+            <span class="sg-price">$165</span>
+          </div>
+          <h4>Aube Fraîche</h4>
+          <p>Neroli · Sea Spray · Bergamot</p>
+          <button class="btn-add-cart sg-atc" data-name="Aube Fraîche" data-price="165">Add to Cart +</button>
+        </div>
       </div>
 
-      <div class="col-card" data-cat="oriental">
-        <div class="col-card-img img-placeholder"></div>
-        <p class="col-tag">Oriental</p>
-        <h4>Encens Doré</h4>
-        <span>$240</span>
-        <button class="btn-add-cart col-atc" data-name="Encens Doré" data-price="240">+ Add</button>
+      <div class="sg-card" data-cat="oriental">
+        <div class="sg-img"><img src="images/d60c065bc1a5e3cef38e782061f9bca0.jpg" alt="Encens Doré" /></div>
+        <div class="sg-body">
+          <div class="sg-top">
+            <span class="sg-cat">Oriental</span>
+            <span class="sg-price">$240</span>
+          </div>
+          <h4>Encens Doré</h4>
+          <p>Frankincense · Oud · Saffron</p>
+          <button class="btn-add-cart sg-atc" data-name="Encens Doré" data-price="240">Add to Cart +</button>
+        </div>
       </div>
 
-      <div class="col-card" data-cat="floral">
-        <div class="col-card-img img-placeholder"></div>
-        <p class="col-tag">Floral</p>
-        <h4>Jasmin Étoile</h4>
-        <span>$195</span>
-        <button class="btn-add-cart col-atc" data-name="Jasmin Étoile" data-price="195">+ Add</button>
+      <div class="sg-card" data-cat="floral">
+        <div class="sg-img"><img src="images/rrr.jpg" alt="Jasmin Étoile" /></div>
+        <div class="sg-body">
+          <div class="sg-top">
+            <span class="sg-cat">Floral</span>
+            <span class="sg-price">$195</span>
+          </div>
+          <h4>Jasmin Étoile</h4>
+          <p>Jasmine · Ylang-Ylang · Vanilla</p>
+          <button class="btn-add-cart sg-atc" data-name="Jasmin Étoile" data-price="195">Add to Cart +</button>
+        </div>
       </div>
 
-      <div class="col-card" data-cat="woody">
-        <div class="col-card-img img-placeholder"></div>
-        <p class="col-tag">Woody</p>
-        <h4>Vétiver Royal</h4>
-        <span>$225</span>
-        <button class="btn-add-cart col-atc" data-name="Vétiver Royal" data-price="225">+ Add</button>
+      <div class="sg-card" data-cat="woody">
+        <div class="sg-img"><img src="images/rose.jpg" alt="Vétiver Royal" /></div>
+        <div class="sg-body">
+          <div class="sg-top">
+            <span class="sg-cat">Woody</span>
+            <span class="sg-price">$225</span>
+          </div>
+          <h4>Vétiver Royal</h4>
+          <p>Vetiver · Patchouli · Leather</p>
+          <button class="btn-add-cart sg-atc" data-name="Vétiver Royal" data-price="225">Add to Cart +</button>
+        </div>
       </div>
 
-      <div class="col-card" data-cat="fresh">
-        <div class="col-card-img img-placeholder"></div>
-        <p class="col-tag">Fresh</p>
-        <h4>Menthe Glacée</h4>
-        <span>$155</span>
-        <button class="btn-add-cart col-atc" data-name="Menthe Glacée" data-price="155">+ Add</button>
-      </div>
+    </div>
 
-      <div class="col-card" data-cat="oriental">
-        <div class="col-card-img img-placeholder"></div>
-        <p class="col-tag">Oriental</p>
-        <h4>Ambre Nocturne</h4>
-        <span>$260</span>
-        <button class="btn-add-cart col-atc" data-name="Ambre Nocturne" data-price="260">+ Add</button>
-      </div>
-
+    <div class="sec-cta">
+      <a href="full-collection.html" class="btn-collection">
+        <span>See Full Collection</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </section>
 
-  <!-- ============================================================
-       ABOUT / STORY — Split Scroll
-  ============================================================ -->
+  <!-- ══════════════════════════════════════════════
+       ABOUT / STORY — Sticky split
+  ══════════════════════════════════════════════ -->
   <section class="section about-section" id="about">
     <div class="about-layout">
-      <div class="about-sticky-text">
-        <p class="section-eyebrow">Our Story</p>
-        <h2 class="about-title">Born in<br><em>Grasse,</em><br>Worn<br>Worldwide</h2>
-        <p class="about-body">
-          Founded in 1978 by master perfumer Élise Moreau, LUMIÈRE began as a singular vision: to create fragrances that outlive fashion and transcend trend.
-        </p>
-        <p class="about-body">
-          Today, three generations later, that obsessive pursuit of olfactory perfection continues — one rare ingredient, one perfect accord, one unforgettable memory at a time.
-        </p>
-        <a href="#contact" class="btn-text magnetic">Meet Our Perfumers →</a>
+      <div class="about-sticky">
+        <div class="sec-label">Our Story</div>
+        <h2 class="about-title">A Legacy of<br><em>Passion</em><br>&amp; Purity</h2>
+        <p class="about-body">Lumière Parfums was born from a passion for timeless elegance and the art of fine perfumery. Each creation is a tribute to tradition, innovation, and the beauty that connects us all.</p>
+        <p class="about-body">Founded in 1978 by master perfumer Élise Moreau, three generations later that obsessive pursuit of olfactory perfection continues.</p>
+        <a href="#contact" class="btn-line about-link">Get in Touch →</a>
       </div>
-      <div class="about-scroll-images">
-        <div class="about-img-wrap img-placeholder about-img-1"></div>
-        <div class="about-img-wrap img-placeholder about-img-2"></div>
-        <div class="about-img-wrap img-placeholder about-img-3"></div>
+      <div class="about-imgs">
+        <div class="ai-wrap ai-1"><img src="images/cc53c6b57aab907d16e9dfe4d4b35299.jpg" alt="Master perfumer at work in the atelier" /></div>
+        <div class="ai-wrap ai-2"><img src="images/87b443f8a13c79e100f202f2c1093754.jpg" alt="Glass perfume bottles on marble surface" /></div>
+        <div class="ai-wrap ai-3"><img src="images/pexels-dhally-romy-16363250-15096888.jpg" alt="Jasmine harvest in Grasse France" /></div>
       </div>
     </div>
   </section>
 
-  <!-- ============================================================
-       CONTACT / FOOTER
-  ============================================================ -->
+  <!-- ══════════════════════════════════════════════
+       CONTACT
+  ══════════════════════════════════════════════ -->
   <section class="section contact-section" id="contact">
     <div class="contact-layout">
-      <div class="contact-text">
-        <p class="section-eyebrow">Get in Touch</p>
-        <h2 class="contact-title">Let's Talk<br><em>Fragrance</em></h2>
+      <div class="contact-left">
+        <div class="sec-label">Get in Touch</div>
+        <h2 class="contact-title">We'd Love to<br><em>Hear From You</em></h2>
         <p class="contact-body">Our fragrance consultants are available to guide you toward your signature scent — in-person or virtually.</p>
-        <div class="contact-details">
+        <address class="contact-addr">
           <p>✦ 12 Rue des Fleurs, Grasse, France</p>
-          <p>✦ hello@lumiere-parfum.com</p>
+          <p>✦ <a href="mailto:hello@lumiere-parfum.com">hello@lumiere-parfum.com</a></p>
           <p>✦ +33 04 93 36 00 00</p>
-        </div>
+        </address>
       </div>
       <form class="contact-form" id="contactForm" novalidate>
-        <div class="form-field">
-          <input type="text" id="nameInput" class="form-input" required placeholder=" " />
-          <label for="nameInput" class="form-label">Your Name</label>
+        <div class="cf-row">
+          <div class="cf-field">
+            <input type="text"  id="cfName"  class="cf-input" placeholder=" " required />
+            <label for="cfName"  class="cf-label">Your Name</label>
+          </div>
+          <div class="cf-field">
+            <input type="email" id="cfEmail" class="cf-input" placeholder=" " required />
+            <label for="cfEmail" class="cf-label">Email Address</label>
+          </div>
         </div>
-        <div class="form-field">
-          <input type="email" id="emailInput" class="form-input" required placeholder=" " />
-          <label for="emailInput" class="form-label">Email Address</label>
+        <div class="cf-field">
+          <input type="text" id="cfSubject" class="cf-input" placeholder=" " />
+          <label for="cfSubject" class="cf-label">Subject</label>
         </div>
-        <div class="form-field">
-          <textarea id="msgInput" class="form-input form-textarea" required placeholder=" " rows="4"></textarea>
-          <label for="msgInput" class="form-label">Your Message</label>
+        <div class="cf-field">
+          <textarea id="cfMsg" class="cf-input cf-textarea" placeholder=" " rows="4" required></textarea>
+          <label for="cfMsg" class="cf-label">Message</label>
         </div>
-        <button type="submit" class="btn-submit magnetic">
-          <span class="btn-submit-text">Send Message</span>
-          <span class="btn-submit-fill"></span>
+        <button type="submit" class="btn-send">
+          <span>Send Message</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span class="btn-send-fill"></span>
         </button>
       </form>
     </div>
   </section>
 
+  <!-- ══════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════ -->
   <footer class="site-footer">
-    <div class="footer-top">
+    <div class="footer-inner">
       <div class="footer-brand">
-        <span class="footer-logo">LUMIÈRE</span>
-        <p>The purest expression of luxury, bottled for eternity.</p>
-        <div class="footer-social">
-          <a href="#" class="social-link">Ig</a>
-          <a href="#" class="social-link">Tw</a>
-          <a href="#" class="social-link">Pt</a>
+        <span class="footer-logo">LUMIÈRE<small>PARFUMS</small></span>
+        <p>Timeless fragrances, thoughtfully crafted for those who appreciate the art of living.</p>
+        <div class="footer-socials">
+          <a href="#" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+          </a>
+          <a href="#" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" aria-label="Pinterest">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.04-2.83.18-.77 1.22-5.16 1.22-5.16s-.31-.62-.31-1.54c0-1.45.84-2.53 1.88-2.53.89 0 1.32.67 1.32 1.47 0 .9-.57 2.24-.87 3.49-.25 1.04.52 1.88 1.53 1.88 1.84 0 3.08-2.35 3.08-5.13 0-2.12-1.43-3.71-4-3.71-2.91 0-4.72 2.18-4.72 4.59 0 .83.24 1.41.62 1.86.17.2.19.28.13.51l-.23.89c-.07.29-.28.35-.51.25-1.38-.57-2.04-2.1-2.04-3.82 0-2.83 2.39-6.22 7.12-6.22 3.8 0 6.3 2.76 6.3 5.72 0 3.91-2.16 6.84-5.33 6.84-1.06 0-2.06-.57-2.4-1.23l-.66 2.56c-.24.92-.88 2.07-1.31 2.77.99.31 2.04.47 3.13.47 5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
+          </a>
         </div>
       </div>
+
       <div class="footer-links">
-        <div class="footer-col">
-          <h5>Collections</h5>
-          <a href="#">Floral</a>
-          <a href="#">Woody</a>
-          <a href="#">Oriental</a>
-          <a href="#">Fresh</a>
+        <div class="fl-col">
+          <h5>Shop</h5>
+          <a href="#">All Perfumes</a>
+          <a href="#">New Arrivals</a>
+          <a href="#">Bestsellers</a>
+          <a href="#">Gift Sets</a>
         </div>
-        <div class="footer-col">
-          <h5>Company</h5>
-          <a href="#">About Us</a>
-          <a href="#">Our Perfumers</a>
+        <div class="fl-col">
+          <h5>About</h5>
+          <a href="#">Our Story</a>
+          <a href="#">Ingredients</a>
           <a href="#">Sustainability</a>
-          <a href="#">Press</a>
+          <a href="#">Journal</a>
         </div>
-        <div class="footer-col">
+        <div class="fl-col">
           <h5>Support</h5>
-          <a href="#">FAQ</a>
+          <a href="#">Contact Us</a>
           <a href="#">Shipping</a>
           <a href="#">Returns</a>
-          <a href="#">Contact</a>
+          <a href="#">FAQ</a>
         </div>
       </div>
+
       <div class="footer-newsletter">
-        <h5>The Lumière Letter</h5>
-        <p>Rare drops. First access. Stories from our atelier.</p>
-        <div class="newsletter-form">
-          <input type="email" placeholder="Your email address" class="newsletter-input" />
-          <button class="newsletter-btn magnetic">→</button>
+        <h5>Stay in the Loop</h5>
+        <p>New drops, first access, stories from the atelier.</p>
+        <div class="nl-form">
+          <input type="email" class="nl-input" placeholder="Your email" />
+          <button class="nl-btn">→</button>
         </div>
       </div>
     </div>
+
     <div class="footer-bottom">
-      <p>© 2025 LUMIÈRE Parfums. All rights reserved.</p>
+      <p>© 2025 Lumière Parfums. All rights reserved.</p>
       <div class="footer-legal">
         <a href="#">Privacy Policy</a>
         <a href="#">Terms of Service</a>
@@ -493,31 +558,36 @@
     </div>
   </footer>
 
-  <!-- ============================================================
+  <!-- ══════════════════════════════════════════════
        CART DRAWER
-  ============================================================ -->
+  ══════════════════════════════════════════════ -->
   <div class="cart-overlay" id="cartOverlay"></div>
   <aside class="cart-drawer" id="cartDrawer">
-    <div class="cart-header">
-      <h3>Your Selection</h3>
-      <button class="cart-close magnetic" id="cartClose">✕</button>
+    <div class="cd-head">
+      <h3>Your Cart <span id="cartCount">(0)</span></h3>
+      <button class="cd-close" id="cartClose">✕</button>
     </div>
-    <div class="cart-items" id="cartItems">
-      <div class="cart-empty" id="cartEmpty">
-        <p>Your cart is empty.</p>
+    <div class="cd-items" id="cartItems">
+      <div class="cd-empty" id="cartEmpty">
+        <p>Your cart is empty</p>
         <span>Begin your olfactory journey.</span>
       </div>
     </div>
-    <div class="cart-footer" id="cartFooter" style="display:none;">
-      <div class="cart-total">
-        <span>Total</span>
-        <span id="cartTotal">$0</span>
+    <div class="cd-foot" id="cartFoot" style="display:none">
+      <div class="cd-subtotal">
+        <span>Subtotal</span><span id="cartSubtotal">$0</span>
       </div>
-      <a href="cart.html" class="btn-checkout magnetic">Proceed to Checkout</a>
+      <div class="cd-shipping">
+        <span>Shipping</span><span class="free">Free</span>
+      </div>
+      <div class="cd-total">
+        <span>Total</span><span id="cartTotal">$0</span>
+      </div>
+      <a href="cart.html" class="btn-checkout">Checkout →</a>
     </div>
   </aside>
 
-  <!-- Toast notification -->
+  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
   <!-- GSAP -->
