@@ -283,26 +283,21 @@
   }
 
   /* ──────────────────────────────────────────────────────────────
-     REMOVE ITEM (with animation)
+     REMOVE ITEM (with confirmation for better UX)
   ────────────────────────────────────────────────────────────── */
   function removeItem (idx) {
-    const rows = cartItemsList.querySelectorAll('.cart-item');
-    const row  = rows[idx];
-    const name = cart[idx] ? cart[idx].name : '';
+    const item = cart[idx];
+    if (!item) return;
 
-    if (row) {
-      row.classList.add('removing');
-      row.addEventListener('animationend', () => {
-        cart.splice(idx, 1);
-        saveCart();
-        render();
-        if (name) showToast(name + ' removed');
-      }, { once: true });
-    } else {
-      cart.splice(idx, 1);
-      saveCart();
-      render();
-    }
+    // Show confirmation dialog
+    const confirmed = confirm(`Remove "${item.name}" from your cart?`);
+    if (!confirmed) return;
+
+    const name = item.name;
+    cart.splice(idx, 1);
+    saveCart();
+    render();
+    if (name) showToast(name + ' removed');
   }
 
   /* ──────────────────────────────────────────────────────────────

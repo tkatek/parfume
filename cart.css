@@ -324,9 +324,9 @@ button { cursor: pointer; font-family: inherit; }
 .item-remove {
   background: none; border: none; color: var(--ink-30);
   display: flex; padding: .3rem;
-  transition: color var(--dur) ease, transform .2s ease;
+  transition: color var(--dur) ease;
 }
-.item-remove:hover { color: var(--ink); transform: rotate(90deg); }
+.item-remove:hover { color: var(--ink); transform: none; }
 
 /* ================================================================
    ORDER NOTES
