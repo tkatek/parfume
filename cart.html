@@ -4,150 +4,209 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Cart — LUMIÈRE</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="index.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="cart.css" />
 </head>
 <body>
 
-  <div class="cursor-dot" id="cursorDot"></div>
+  <!-- Custom cursor -->
+  <div class="cursor-dot"  id="cursorDot"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- HEADER -->
-  <header class="site-header scrolled" id="siteHeader">
+  <!-- ═══════════════════════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════════════════════ -->
+  <header class="site-header" id="siteHeader">
     <div class="header-inner">
-      <a href="index.html" class="logo magnetic">LUMIÈRE</a>
-      <nav class="main-nav">
-        <a href="index.html#home" class="nav-link">Home</a>
-        <a href="index.html#shop" class="nav-link">Shop</a>
-        <a href="index.html#philosophy" class="nav-link">About</a>
-        <a href="index.html#contact" class="nav-link">Contact</a>
+
+      <button class="burger-btn" id="burgerBtn" aria-label="Open navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <a href="index.html" class="logo">LUMIÈRE</a>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html"          class="nav-link">Home</a>
+        <a href="fullcollection.html" class="nav-link">Shop</a>
+        <a href="#"                   class="nav-link">About</a>
+        <a href="#"                   class="nav-link">Contact</a>
       </nav>
+
       <div class="header-actions">
-        <a href="index.html" class="btn-ghost" style="font-size:0.72rem;">← Continue Shopping</a>
+        <a href="cart.html" class="icon-btn nav-active" aria-label="Cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </a>
       </div>
     </div>
   </header>
 
-  <!-- Cart Page -->
-  <main class="cart-page">
-
-    <div class="cart-page-header">
-      <p class="section-eyebrow">Your Selection</p>
-      <h1 class="cart-page-title">Shopping <em>Cart</em></h1>
+  <!-- Mobile sidebar -->
+  <div class="mob-overlay" id="mobOverlay"></div>
+  <aside class="mob-sidebar" id="mobSidebar">
+    <div class="mob-sidebar-head">
+      <span class="mob-logo">LUMIÈRE</span>
+      <button class="mob-close-btn" id="mobCloseBtn" aria-label="Close navigation">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="1" y1="1" x2="17" y2="17"/><line x1="17" y1="1" x2="1" y2="17"/>
+        </svg>
+      </button>
     </div>
+    <nav class="mob-nav-links">
+      <a href="index.html">Home</a>
+      <a href="fullcollection.html">Shop</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+    <p class="mob-sidebar-tagline">The art of fine fragrance.</p>
+  </aside>
 
-    <div class="cart-page-layout">
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE HERO
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="cart-hero">
+    <p class="cart-hero__eyebrow">Your Selection</p>
+    <h1 class="cart-hero__title">Shopping <em>Cart</em></h1>
+  </section>
 
-      <!-- Cart Items Column -->
-      <div class="cart-page-items">
-
-        <div class="cart-page-thead">
-          <span>Fragrance</span>
-          <span>Price</span>
-          <span>Quantity</span>
-          <span>Total</span>
-        </div>
-
-        <div id="cartPageItems">
-          <!-- Populated by JS -->
-        </div>
-
-        <div class="cart-page-empty" id="cartPageEmpty" style="display:none;">
-          <p>Your cart is empty.</p>
-          <a href="index.html#shop" class="btn-outline magnetic" style="margin-top:1.5rem;">Explore Collection →</a>
-        </div>
-
-        <!-- Coupon row -->
-        <div class="coupon-row">
-          <input type="text" class="coupon-input" placeholder="Promo code" id="couponInput" />
-          <button class="coupon-btn magnetic" id="couponBtn">Apply</button>
-        </div>
-
+  <!-- ═══════════════════════════════════════════════════════════
+       BREADCRUMB
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="breadcrumb">
+    <div class="breadcrumb-inner">
+      <a href="fullcollection.html" class="breadcrumb-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Continue Shopping
+      </a>
+      <div class="cart-steps">
+        <span class="step step--active">01 · Cart</span>
+        <span class="step-sep">—</span>
+        <span class="step">02 · Review</span>
+        <span class="step-sep">—</span>
+        <span class="step">03 · Confirm</span>
       </div>
-
-      <!-- Order Summary -->
-      <aside class="cart-summary">
-        <h3 class="summary-title">Order Summary</h3>
-
-        <div class="summary-lines">
-          <div class="summary-line">
-            <span>Subtotal</span>
-            <span id="summarySubtotal">$0</span>
-          </div>
-          <div class="summary-line">
-            <span>Shipping</span>
-            <span class="summary-free">Complimentary</span>
-          </div>
-          <div class="summary-line" id="discountLine" style="display:none;">
-            <span>Discount</span>
-            <span id="discountVal" style="color:var(--accent-sage);">−$0</span>
-          </div>
-          <div class="summary-line summary-total">
-            <span>Total</span>
-            <span id="summaryTotal">$0</span>
-          </div>
-        </div>
-
-        <div class="summary-note">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Secure checkout. Complimentary worldwide shipping.
-        </div>
-
-        <button class="btn-checkout-full magnetic" id="checkoutBtn">
-          <span>Proceed to Payment</span>
-          <span class="checkout-arrow">→</span>
-        </button>
-
-        <div class="payment-icons">
-          <span>VISA</span><span>MC</span><span>AMEX</span><span>PayPal</span>
-        </div>
-      </aside>
-
     </div>
+  </div>
 
-    <!-- You may also like -->
-    <section class="cart-reco">
-      <div class="section-header">
-        <p class="section-eyebrow">Complete the Experience</p>
-        <h2 class="section-title" style="font-size:clamp(1.8rem,3vw,2.8rem);">You May Also <em>Love</em></h2>
+  <!-- ═══════════════════════════════════════════════════════════
+       MAIN LAYOUT
+  ═══════════════════════════════════════════════════════════ -->
+  <main class="cart-main" id="cartMain">
+
+    <!-- ── LEFT: Cart items ── -->
+    <section class="cart-items-col">
+
+      <!-- Column headers -->
+      <div class="cart-table-head">
+        <span class="th-product">Product</span>
+        <span class="th-price">Price</span>
+        <span class="th-qty">Qty</span>
+        <span class="th-total">Total</span>
+        <span class="th-remove"></span>
       </div>
-      <div class="reco-grid">
-        <div class="reco-card">
-          <div class="reco-img img-placeholder"></div>
-          <h4>Rose Lumière</h4>
-          <p>$185</p>
-          <button class="btn-add-cart reco-atc" data-name="Rose Lumière" data-price="185">+ Add to Cart</button>
+
+      <!-- Items container (populated by JS) -->
+      <div class="cart-items-list" id="cartItemsList"></div>
+
+      <!-- Empty state -->
+      <div class="cart-empty" id="cartEmpty">
+        <div class="cart-empty__icon">
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
         </div>
-        <div class="reco-card">
-          <div class="reco-img img-placeholder"></div>
-          <h4>Encens Doré</h4>
-          <p>$240</p>
-          <button class="btn-add-cart reco-atc" data-name="Encens Doré" data-price="240">+ Add to Cart</button>
-        </div>
-        <div class="reco-card">
-          <div class="reco-img img-placeholder"></div>
-          <h4>Aube Fraîche</h4>
-          <p>$165</p>
-          <button class="btn-add-cart reco-atc" data-name="Aube Fraîche" data-price="165">+ Add to Cart</button>
-        </div>
-        <div class="reco-card">
-          <div class="reco-img img-placeholder"></div>
-          <h4>Vétiver Royal</h4>
-          <p>$225</p>
-          <button class="btn-add-cart reco-atc" data-name="Vétiver Royal" data-price="225">+ Add to Cart</button>
-        </div>
+        <h2>Your cart is empty</h2>
+        <p>You haven't added any fragrances yet.<br>Discover our collection and find your signature scent.</p>
+        <a href="fullcollection.html" class="btn-discover">Explore the Collection</a>
       </div>
+
+      <!-- Order notes -->
+      <div class="cart-notes" id="cartNotes" style="display:none;">
+        <label for="orderNotes" class="notes-label">Order Notes <span>(optional)</span></label>
+        <textarea id="orderNotes" class="notes-textarea"
+                  placeholder="Special requests, gift wrapping, preferred delivery window…"
+                  rows="3" maxlength="400"></textarea>
+        <p class="notes-char"><span id="notesChar">0</span>/400</p>
+      </div>
+
     </section>
+
+    <!-- ── RIGHT: Order Summary ── -->
+    <aside class="cart-summary" id="cartSummary" style="display:none;">
+
+      <div class="summary-card">
+        <h2 class="summary-title">Order Summary</h2>
+
+        <div class="summary-lines" id="summaryLines"></div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="summarySubtotal">$0</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span class="summary-free" id="summaryShipping">Free</span>
+        </div>
+        <div class="summary-row summary-row--total">
+          <span>Total</span>
+          <span id="summaryTotal">$0</span>
+        </div>
+
+        <!-- WhatsApp Checkout Button -->
+        <a href="#" class="btn-whatsapp" id="btnWhatsApp" target="_blank" rel="noopener noreferrer">
+          <svg class="wa-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.549 4.107 1.51 5.84L0 24l6.335-1.48A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.814 9.814 0 0 1-5.003-1.368l-.36-.214-3.724.977.994-3.63-.235-.374A9.818 9.818 0 0 1 2.182 12C2.182 6.57 6.57 2.182 12 2.182c5.43 0 9.818 4.388 9.818 9.818 0 5.43-4.388 9.818-9.818 9.818z"/>
+          </svg>
+          Order via WhatsApp
+        </a>
+
+        <p class="wa-note">
+          Clicking the button opens WhatsApp with your order details pre-filled. 
+          We'll confirm availability and arrange payment within 2 hours.
+        </p>
+
+        <!-- Trust badges -->
+        <div class="trust-badges">
+          <div class="trust-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Secure & Discreet</span>
+          </div>
+          <div class="trust-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <span>Fast Delivery</span>
+          </div>
+          <div class="trust-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>Worldwide Shipping</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommended -->
+      <div class="summary-promo">
+        <p class="promo-text">✦ Complimentary samples with every order over $300</p>
+      </div>
+
+    </aside>
 
   </main>
 
+  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="cart.js"></script>
 </body>
-</html> 
+</html>

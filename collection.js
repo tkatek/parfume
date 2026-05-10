@@ -1,324 +1,378 @@
-/* ============================================================
+/* ================================================================
    LUMIÈRE — collection.js
-   Horizontal filter, sorting, view toggle, cart, cursor
-   ============================================================ */
+   Full Collection page · Production ready
+   Handles: header scroll · mobile sidebar · hero entrance ·
+            horizontal filter + pill · sort · view toggle ·
+            card entrance animations · quick-add · cart drawer ·
+            custom cursor · toast
+================================================================ */
+'use strict';
 
 (function () {
-  'use strict';
 
-  /* ── State ─────────────────────────────────────────────────── */
-  let activeCategory = 'all';
-  let cart = JSON.parse(localStorage.getItem('lumiere_cart') || '[]');
+  /* ──────────────────────────────────────────────────────────────
+     STATE
+  ────────────────────────────────────────────────────────────── */
+  let activeCat = 'all';
+  let cart = [];
 
-  /* ── DOM refs ───────────────────────────────────────────────── */
-  const grid        = document.getElementById('collGrid');
-  const allItems    = () => [...grid.querySelectorAll('.coll-item')];
-  const countEl     = document.getElementById('visibleCount');
-  const sortSel     = document.getElementById('sortSelect');
-  const filterTabs  = document.querySelectorAll('.filter-tab');
-  const pill        = document.getElementById('filterPill');
-  const emptyState  = document.getElementById('collEmpty');
-  const viewBtns    = document.querySelectorAll('.view-btn');
-  const cartToggle  = document.getElementById('cartToggle');
-  const cartClose   = document.getElementById('cartClose');
-  const cartOverlay = document.getElementById('cartOverlay');
-  const cartDrawer  = document.getElementById('cartDrawer');
-  const cartItemsEl = document.getElementById('cartItems');
-  const cartEmptyEl = document.getElementById('cartEmpty');
-  const cartFooter  = document.getElementById('cartFooter');
-  const cartBadge   = document.getElementById('cartBadge');
-  const cartTotalEl = document.getElementById('cartTotal');
-  const toast       = document.getElementById('toast');
-  const header      = document.getElementById('siteHeader');
+  try { cart = JSON.parse(localStorage.getItem('lumiere_cart') || '[]'); } catch (_) { cart = []; }
 
-  /* ─────────────────────────────────────────────────────────────
-     HORIZONTAL FILTER
-  ───────────────────────────────────────────────────────────── */
-  function movePill(tab) {
-    const trackRect = document.querySelector('.filter-underline-track').getBoundingClientRect();
-    const tabRect   = tab.getBoundingClientRect();
-    pill.style.left  = (tabRect.left - trackRect.left) + 'px';
-    pill.style.width = tabRect.width + 'px';
-  }
+  /* ──────────────────────────────────────────────────────────────
+     DOM REFS
+  ────────────────────────────────────────────────────────────── */
+  const $ = id => document.getElementById(id);
+  const $$ = sel => [...document.querySelectorAll(sel)];
 
-  function applyFilter(cat) {
-    activeCategory = cat;
+  const siteHeader    = $('siteHeader');
+  const burgerBtn     = $('burgerBtn');
+  const mobOverlay    = $('mobOverlay');
+  const mobSidebar    = $('mobSidebar');
+  const mobCloseBtn   = $('mobCloseBtn');
 
-    // Update tab states
-    filterTabs.forEach(t => {
-      const isActive = t.dataset.cat === cat;
-      t.classList.toggle('active', isActive);
-      t.setAttribute('aria-selected', isActive);
-      if (isActive) movePill(t);
-    });
+  const collHero      = document.querySelector('.coll-hero');
+  const fTabs         = $$('.f-tab');
+  const fPill         = $('fPill');
+  const fTrack        = document.querySelector('.f-track');
 
-    renderGrid();
-  }
+  const sortSelect    = $('sortSelect');
+  const viewBtns      = $$('.view-btn');
+  const collGrid      = $('collGrid');
+  const visibleCount  = $('visibleCount');
+  const collEmpty     = $('collEmpty');
 
-  filterTabs.forEach(tab => {
-    tab.addEventListener('click', () => applyFilter(tab.dataset.cat));
-  });
+  const cartToggle    = $('cartToggle');
+  const cartClose     = $('cartClose');
+  const cartOverlay   = $('cartOverlay');
+  const cartDrawer    = $('cartDrawer');
+  const cartBadge     = $('cartBadge');
+  const cartDrawerBody = $('cartDrawerBody');
+  const cartEmptyState = $('cartEmptyState');
+  const cartDrawerFt  = $('cartDrawerFt');
+  const cartDrawerCount = $('cartDrawerCount');
+  const cartTotal     = $('cartTotal');
+  const toast         = $('toast');
 
-  // Initialise pill position on load
-  window.addEventListener('load', () => {
-    const activeTab = document.querySelector('.filter-tab.active');
-    if (activeTab) movePill(activeTab);
-  });
-
-  // Keep pill aligned on resize
-  window.addEventListener('resize', () => {
-    const activeTab = document.querySelector('.filter-tab.active');
-    if (activeTab) movePill(activeTab);
-  });
-
-  /* ─────────────────────────────────────────────────────────────
-     SORT
-  ───────────────────────────────────────────────────────────── */
-  function getSortedItems(items) {
-    const sorted = [...items];
-    const mode = sortSel ? sortSel.value : 'featured';
-    switch (mode) {
-      case 'price-asc':  return sorted.sort((a, b) => +a.dataset.price - +b.dataset.price);
-      case 'price-desc': return sorted.sort((a, b) => +b.dataset.price - +a.dataset.price);
-      case 'name':       return sorted.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name, 'fr'));
-      default:           return sorted; // featured = DOM order
+  /* ──────────────────────────────────────────────────────────────
+     HEADER – scroll behaviour
+  ────────────────────────────────────────────────────────────── */
+  function onScroll () {
+    if (window.scrollY > 50) {
+      siteHeader.classList.add('scrolled');
+    } else {
+      siteHeader.classList.remove('scrolled');
     }
   }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
-  if (sortSel) sortSel.addEventListener('change', renderGrid);
+  /* ──────────────────────────────────────────────────────────────
+     MOBILE SIDEBAR
+  ────────────────────────────────────────────────────────────── */
+  function openMobNav () {
+    mobSidebar.classList.add('is-open');
+    mobOverlay.classList.add('is-open');
+    burgerBtn.classList.add('is-open');
+    burgerBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMobNav () {
+    mobSidebar.classList.remove('is-open');
+    mobOverlay.classList.remove('is-open');
+    burgerBtn.classList.remove('is-open');
+    burgerBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+  burgerBtn.addEventListener('click', openMobNav);
+  mobCloseBtn.addEventListener('click', closeMobNav);
+  mobOverlay.addEventListener('click', closeMobNav);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMobNav(); });
 
-  /* ─────────────────────────────────────────────────────────────
-     RENDER (filter + sort + animate)
-  ───────────────────────────────────────────────────────────── */
-  function renderGrid() {
-    const items = allItems();
-
-    // Filter
-    const visible = items.filter(item => {
-      return activeCategory === 'all' || item.dataset.cat === activeCategory;
+  /* ──────────────────────────────────────────────────────────────
+     HERO ENTRANCE ANIMATION
+  ────────────────────────────────────────────────────────────── */
+  if (collHero) {
+    // trigger the CSS transitions via class
+    requestAnimationFrame(() => {
+      setTimeout(() => collHero.classList.add('in-view'), 80);
     });
-    const hidden  = items.filter(item => !visible.includes(item));
+  }
 
-    // Sort
-    const sorted = getSortedItems(visible);
+  /* ──────────────────────────────────────────────────────────────
+     FILTER PILL – position helper
+  ────────────────────────────────────────────────────────────── */
+  function movePill (tab) {
+    if (!fPill || !fTrack) return;
+    const trackRect = fTrack.getBoundingClientRect();
+    const tabRect   = tab.getBoundingClientRect();
+    fPill.style.left  = (tabRect.left - trackRect.left) + 'px';
+    fPill.style.width = tabRect.width + 'px';
+  }
 
-    // Hide filtered-out
-    hidden.forEach(item => {
-      item.classList.add('hidden');
-      item.classList.remove('reveal');
+  // Init pill on load
+  window.addEventListener('load', () => {
+    const active = document.querySelector('.f-tab--active');
+    if (active) movePill(active);
+  });
+
+  window.addEventListener('resize', () => {
+    const active = document.querySelector('.f-tab--active');
+    if (active) movePill(active);
+  });
+
+  /* ──────────────────────────────────────────────────────────────
+     FILTER + SORT – render grid
+  ────────────────────────────────────────────────────────────── */
+  function getCards () { return $$('.p-card'); }
+
+  function renderGrid () {
+    const cards   = getCards();
+    const mode    = sortSelect ? sortSelect.value : 'featured';
+
+    // Split visible / hidden
+    const visible = cards.filter(c => activeCat === 'all' || c.dataset.cat === activeCat);
+    const hidden  = cards.filter(c => !visible.includes(c));
+
+    // Hide
+    hidden.forEach(c => {
+      c.classList.add('is-hidden');
+      c.classList.remove('is-visible');
     });
 
-    // Re-order & reveal visible
-    sorted.forEach((item, i) => {
-      item.classList.remove('hidden', 'reveal');
-      grid.appendChild(item); // re-order in DOM
-      // staggered reveal
-      item.style.animationDelay = (i * 0.04) + 's';
-      void item.offsetWidth; // reflow
-      item.classList.add('reveal');
+    // Sort visible
+    const sorted = [...visible];
+    if (mode === 'price-asc')  sorted.sort((a, b) => +a.dataset.price - +b.dataset.price);
+    if (mode === 'price-desc') sorted.sort((a, b) => +b.dataset.price - +a.dataset.price);
+    if (mode === 'name')       sorted.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name, 'fr'));
+
+    // Re-append in sorted order & reveal with stagger
+    sorted.forEach((c, i) => {
+      c.classList.remove('is-hidden');
+      collGrid.appendChild(c);
+      // reset then re-trigger entrance
+      c.classList.remove('is-visible');
+      c.style.transitionDelay = (i * 0.04) + 's';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => c.classList.add('is-visible'));
+      });
     });
 
-    // Count
-    if (countEl) countEl.textContent = visible.length;
+    // Update count
+    if (visibleCount) visibleCount.textContent = visible.length;
 
     // Empty state
-    if (emptyState) {
-      emptyState.style.display = visible.length === 0 ? 'block' : 'none';
+    if (collEmpty) {
+      if (visible.length === 0) collEmpty.classList.add('show');
+      else collEmpty.classList.remove('show');
     }
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     VIEW TOGGLE (grid / list)
-  ───────────────────────────────────────────────────────────── */
-  viewBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      viewBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      grid.classList.toggle('list-view', btn.dataset.view === 'list');
+  // Tab clicks
+  fTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      fTabs.forEach(t => {
+        t.classList.remove('f-tab--active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('f-tab--active');
+      tab.setAttribute('aria-selected', 'true');
+      activeCat = tab.dataset.cat;
+      movePill(tab);
+      renderGrid();
     });
   });
 
-  /* ─────────────────────────────────────────────────────────────
-     CART
-  ───────────────────────────────────────────────────────────── */
-  function saveCart() {
-    localStorage.setItem('lumiere_cart', JSON.stringify(cart));
+  // Sort change
+  if (sortSelect) sortSelect.addEventListener('change', renderGrid);
+
+  /* ──────────────────────────────────────────────────────────────
+     VIEW TOGGLE – grid / list
+  ────────────────────────────────────────────────────────────── */
+  viewBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      viewBtns.forEach(b => b.classList.remove('view-btn--active'));
+      btn.classList.add('view-btn--active');
+      collGrid.classList.toggle('list-view', btn.dataset.view === 'list');
+    });
+  });
+
+  /* ──────────────────────────────────────────────────────────────
+     CARD ENTRANCE (IntersectionObserver)
+  ────────────────────────────────────────────────────────────── */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  function observeCards () {
+    getCards().forEach(c => io.observe(c));
+  }
+  observeCards();
+
+  /* ──────────────────────────────────────────────────────────────
+     CART — localStorage persistence
+  ────────────────────────────────────────────────────────────── */
+  function saveCart () {
+    try { localStorage.setItem('lumiere_cart', JSON.stringify(cart)); } catch (_) {}
   }
 
-  function openCart() {
-    cartDrawer.classList.add('open');
-    cartOverlay.classList.add('active');
+  function updateBadge () {
+    const count = cart.length;
+    if (cartBadge) {
+      cartBadge.textContent = count;
+      cartBadge.classList.add('bump');
+      setTimeout(() => cartBadge.classList.remove('bump'), 300);
+    }
+    if (cartDrawerCount) cartDrawerCount.textContent = count;
+  }
+
+  /* ── Open / Close ── */
+  function openCart () {
+    cartDrawer.classList.add('is-open');
+    cartOverlay.classList.add('is-open');
     document.body.style.overflow = 'hidden';
     renderCart();
   }
-
-  function closeCart() {
-    cartDrawer.classList.remove('open');
-    cartOverlay.classList.remove('active');
+  function closeCart () {
+    cartDrawer.classList.remove('is-open');
+    cartOverlay.classList.remove('is-open');
     document.body.style.overflow = '';
   }
+  cartToggle.addEventListener('click', openCart);
+  cartClose.addEventListener('click', closeCart);
+  cartOverlay.addEventListener('click', closeCart);
 
-  function renderCart() {
-    // Clear previous items (keep empty msg)
-    [...cartItemsEl.querySelectorAll('.cart-line')].forEach(el => el.remove());
+  /* ── Render cart items ── */
+  function renderCart () {
+    // Clear previous lines (keep empty state node)
+    $$('.cart-line').forEach(el => el.remove());
 
     if (cart.length === 0) {
-      cartEmptyEl.style.display = 'block';
-      cartFooter.style.display  = 'none';
+      cartEmptyState.style.display = 'flex';
+      cartDrawerFt.classList.remove('show');
     } else {
-      cartEmptyEl.style.display = 'none';
-      cartFooter.style.display  = 'block';
+      cartEmptyState.style.display = 'none';
+      cartDrawerFt.classList.add('show');
 
-      cart.forEach((item, i) => {
+      cart.forEach((item, idx) => {
         const line = document.createElement('div');
         line.className = 'cart-line';
-        line.style.cssText = `
-          display:flex; justify-content:space-between; align-items:center;
-          padding:.9rem 0; border-bottom:1px solid rgba(26,23,20,.07);
-          font-family:'Jost',sans-serif; font-size:.78rem; color:#1a1714;
-        `;
         line.innerHTML = `
-          <div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400;">${item.name}</div>
-            <div style="color:#6b6460;font-weight:300;margin-top:.15rem;">$${item.price}</div>
+          <div class="cart-line__img">
+            <img src="${item.img}" alt="${escapeHtml(item.name)}" loading="lazy">
           </div>
-          <button data-idx="${i}" style="background:none;border:none;cursor:pointer;color:#6b6460;font-size:1rem;transition:color .2s ease;" aria-label="Remove">✕</button>
+          <div class="cart-line__info">
+            <p class="cart-line__name">${escapeHtml(item.name)}</p>
+            <p class="cart-line__price">$${item.price}</p>
+          </div>
+          <button class="cart-line__remove" data-idx="${idx}" aria-label="Remove ${escapeHtml(item.name)}">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4">
+              <line x1="1" y1="1" x2="11" y2="11"/>
+              <line x1="11" y1="1" x2="1" y2="11"/>
+            </svg>
+          </button>
         `;
-        line.querySelector('button').addEventListener('click', e => {
-          cart.splice(+e.currentTarget.dataset.idx, 1);
+        cartDrawerBody.appendChild(line);
+      });
+
+      // Remove buttons
+      $$('.cart-line__remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const i = +btn.dataset.idx;
+          cart.splice(i, 1);
           saveCart();
           updateBadge();
           renderCart();
         });
-        cartItemsEl.appendChild(line);
       });
 
+      // Total
       const total = cart.reduce((s, i) => s + i.price, 0);
-      if (cartTotalEl) cartTotalEl.textContent = '$' + total;
+      if (cartTotal) cartTotal.textContent = '$' + total;
     }
   }
 
-  function updateBadge() {
-    if (cartBadge) cartBadge.textContent = cart.length;
-  }
-
-  function addToCart(name, price) {
-    cart.push({ name, price: +price });
+  /* ── Add to cart ── */
+  function addToCart (name, price, img) {
+    cart.push({ name, price: +price, img });
     saveCart();
     updateBadge();
-    showToast(name + ' added');
+    showToast(name + ' added to cart');
   }
 
-  if (cartToggle)  cartToggle.addEventListener('click', openCart);
-  if (cartClose)   cartClose.addEventListener('click', closeCart);
-  if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
-
-  // Quick Add buttons (event delegation)
-  grid.addEventListener('click', e => {
-    const btn = e.target.closest('.coll-quick');
+  /* Delegate quick-add clicks */
+  collGrid.addEventListener('click', e => {
+    const btn = e.target.closest('.p-card__add');
     if (!btn) return;
     e.stopPropagation();
-    addToCart(btn.dataset.name, btn.dataset.price);
+    addToCart(
+      btn.dataset.name,
+      btn.dataset.price,
+      btn.dataset.img
+    );
   });
 
-  /* ─────────────────────────────────────────────────────────────
+  /* ──────────────────────────────────────────────────────────────
      TOAST
-  ───────────────────────────────────────────────────────────── */
+  ────────────────────────────────────────────────────────────── */
   let toastTimer;
-  function showToast(msg) {
+  function showToast (msg) {
     if (!toast) return;
     toast.textContent = msg;
     toast.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     HEADER SCROLL BEHAVIOUR
-  ───────────────────────────────────────────────────────────── */
-  if (header) {
-    let lastY = 0;
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      header.style.background = y > 60 ? 'rgba(249,246,241,.92)' : '';
-      header.style.backdropFilter = y > 60 ? 'blur(12px)' : '';
-      header.style.boxShadow = y > 60 ? '0 1px 0 rgba(26,23,20,.08)' : '';
-      lastY = y;
-    }, { passive: true });
-  }
-
-  /* ─────────────────────────────────────────────────────────────
+  /* ──────────────────────────────────────────────────────────────
      CUSTOM CURSOR
-  ───────────────────────────────────────────────────────────── */
-  const dot  = document.getElementById('cursorDot');
-  const ring = document.getElementById('cursorRing');
+  ────────────────────────────────────────────────────────────── */
+  const cursorDot  = $('cursorDot');
+  const cursorRing = $('cursorRing');
 
-  if (dot && ring && window.matchMedia('(pointer:fine)').matches) {
-    let mx = -100, my = -100;
-    let rx = -100, ry = -100;
+  if (cursorDot && cursorRing && window.matchMedia('(pointer:fine)').matches) {
+    let mx = -200, my = -200, rx = -200, ry = -200;
 
     document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
-    document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
 
-    document.querySelectorAll('button, a, [data-magnetic]').forEach(el => {
-      el.addEventListener('mouseenter', () => ring.classList.add('expand'));
-      el.addEventListener('mouseleave', () => ring.classList.remove('expand'));
+    const interactable = 'button, a, select, [data-cursor]';
+    document.addEventListener('mouseover', e => {
+      if (e.target.closest(interactable)) cursorRing.classList.add('is-big');
+    });
+    document.addEventListener('mouseout', e => {
+      if (e.target.closest(interactable)) cursorRing.classList.remove('is-big');
     });
 
-    (function animateCursor() {
-      dot.style.left  = mx + 'px';
-      dot.style.top   = my + 'px';
-      rx += (mx - rx) * 0.12;
-      ry += (my - ry) * 0.12;
-      ring.style.left = rx + 'px';
-      ring.style.top  = ry + 'px';
-      requestAnimationFrame(animateCursor);
+    (function tick () {
+      cursorDot.style.left  = mx + 'px';
+      cursorDot.style.top   = my + 'px';
+      rx += (mx - rx) * 0.13;
+      ry += (my - ry) * 0.13;
+      cursorRing.style.left = rx + 'px';
+      cursorRing.style.top  = ry + 'px';
+      requestAnimationFrame(tick);
     })();
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     GSAP ENTRANCE ANIMATIONS
-  ───────────────────────────────────────────────────────────── */
-  if (window.gsap && window.ScrollTrigger) {
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Hero
-    gsap.from('.coll-hero-content > *', {
-      opacity: 0,
-      y: 24,
-      duration: 1,
-      stagger: .18,
-      ease: 'power2.out',
-      delay: .1
-    });
-
-    // Filter bar
-    gsap.from('.coll-filter-bar', {
-      opacity: 0,
-      y: 16,
-      duration: .8,
-      ease: 'power2.out',
-      scrollTrigger: { trigger: '.coll-filter-bar', start: 'top 85%' }
-    });
-
-    // Cards on scroll
-    ScrollTrigger.batch('.coll-item', {
-      start: 'top 90%',
-      onEnter: batch => gsap.from(batch, {
-        opacity: 0,
-        y: 30,
-        duration: .65,
-        stagger: .07,
-        ease: 'power2.out',
-        clearProps: 'all'
-      })
-    });
+  /* ──────────────────────────────────────────────────────────────
+     HELPER
+  ────────────────────────────────────────────────────────────── */
+  function escapeHtml (str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
-  /* ─────────────────────────────────────────────────────────────
+  /* ──────────────────────────────────────────────────────────────
      INIT
-  ───────────────────────────────────────────────────────────── */
+  ────────────────────────────────────────────────────────────── */
   updateBadge();
+  renderCart();   // sync cart count on page load
 
 })();
