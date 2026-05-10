@@ -70,6 +70,7 @@
      MOBILE SIDEBAR
   ────────────────────────────────────────────────────────────── */
   function openMobNav () {
+    if (!mobSidebar || !mobOverlay || !burgerBtn) return;
     mobSidebar.classList.add('is-open');
     mobOverlay.classList.add('is-open');
     burgerBtn.classList.add('is-open');
@@ -77,16 +78,20 @@
     document.body.style.overflow = 'hidden';
   }
   function closeMobNav () {
+    if (!mobSidebar || !mobOverlay || !burgerBtn) return;
     mobSidebar.classList.remove('is-open');
     mobOverlay.classList.remove('is-open');
     burgerBtn.classList.remove('is-open');
     burgerBtn.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
   }
-  burgerBtn.addEventListener('click', openMobNav);
-  mobCloseBtn.addEventListener('click', closeMobNav);
-  mobOverlay.addEventListener('click', closeMobNav);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMobNav(); });
+
+  if (burgerBtn && mobCloseBtn && mobOverlay) {
+    burgerBtn.addEventListener('click', openMobNav);
+    mobCloseBtn.addEventListener('click', closeMobNav);
+    mobOverlay.addEventListener('click', closeMobNav);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMobNav(); });
+  }
 
   /* ──────────────────────────────────────────────────────────────
      HERO ENTRANCE ANIMATION
