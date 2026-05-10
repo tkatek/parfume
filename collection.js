@@ -18,6 +18,25 @@
 
   try { cart = JSON.parse(localStorage.getItem('lumiere_cart') || '[]'); } catch (_) { cart = []; }
 
+  cart = cart.map(item => ({
+    name: item.name || 'Unknown',
+    price: +item.price || 0,
+    img: item.img || item.image || '',
+    qty: item.qty || 1
+  }));
+
+  const merged = [];
+  cart.forEach(item => {
+    const existing = merged.find(m => m.name === item.name);
+    if (existing) {
+      existing.qty += item.qty;
+      if (!existing.img && item.img) existing.img = item.img;
+    } else {
+      merged.push({ ...item });
+    }
+  });
+  cart = merged;
+
   /* ──────────────────────────────────────────────────────────────
      DOM REFS
   ────────────────────────────────────────────────────────────── */
@@ -226,7 +245,7 @@
   }
 
   function updateBadge () {
-    const count = cart.length;
+    const count = cart.reduce((s, i) => s + (i.qty || 1), 0);
     if (cartBadge) {
       cartBadge.textContent = count;
       cartBadge.classList.add('bump');
@@ -273,6 +292,7 @@
           <div class="cart-line__info">
             <p class="cart-line__name">${escapeHtml(item.name)}</p>
             <p class="cart-line__price">$${item.price}</p>
+            ${item.qty > 1 ? `<p class="cart-line__qty">Qty: ${item.qty}</p>` : ''}
           </div>
           <button class="cart-line__remove" data-idx="${idx}" aria-label="Remove ${escapeHtml(item.name)}">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4">
@@ -303,7 +323,13 @@
 
   /* ── Add to cart ── */
   function addToCart (name, price, img) {
-    cart.push({ name, price: +price, img });
+    const existing = cart.find(i => i.name === name);
+    if (existing) {
+      existing.qty = (existing.qty || 1) + 1;
+      if (!existing.img && img) existing.img = img;
+    } else {
+      cart.push({ name, price: +price, img, qty: 1 });
+    }
     saveCart();
     updateBadge();
     showToast(name + ' added to cart');

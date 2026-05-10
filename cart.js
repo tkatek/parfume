@@ -64,6 +64,7 @@
      MOBILE SIDEBAR
   ────────────────────────────────────────────────────────────── */
   function openMob () {
+    if (!mobSidebar || !mobOverlay || !burgerBtn) return;
     mobSidebar.classList.add('is-open');
     mobOverlay.classList.add('is-open');
     burgerBtn.classList.add('is-open');
@@ -71,16 +72,20 @@
     document.body.style.overflow = 'hidden';
   }
   function closeMob () {
+    if (!mobSidebar || !mobOverlay || !burgerBtn) return;
     mobSidebar.classList.remove('is-open');
     mobOverlay.classList.remove('is-open');
     burgerBtn.classList.remove('is-open');
     burgerBtn.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
   }
-  burgerBtn.addEventListener('click', openMob);
-  mobCloseBtn.addEventListener('click', closeMob);
-  mobOverlay.addEventListener('click', closeMob);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMob(); });
+
+  if (burgerBtn && mobCloseBtn && mobOverlay) {
+    burgerBtn.addEventListener('click', openMob);
+    mobCloseBtn.addEventListener('click', closeMob);
+    mobOverlay.addEventListener('click', closeMob);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMob(); });
+  }
 
   /* ──────────────────────────────────────────────────────────────
      PERSIST CART
@@ -305,12 +310,12 @@
      Old cart entries may lack qty / cat / conc — fill defaults
   ────────────────────────────────────────────────────────────── */
   cart = cart.map(item => ({
-    name:  item.name  || 'Unknown',
+    name:  item.name   || 'Unknown',
     price: +item.price || 0,
-    img:   item.img   || '',
-    cat:   item.cat   || 'Fragrance',
-    conc:  item.conc  || 'Eau de Parfum',
-    qty:   item.qty   || 1
+    img:   item.img    || item.image || '',
+    cat:   item.cat    || 'Fragrance',
+    conc:  item.conc   || 'Eau de Parfum',
+    qty:   item.qty    || 1
   }));
 
   // Merge duplicate names
@@ -319,6 +324,7 @@
     const existing = merged.find(m => m.name === item.name);
     if (existing) {
       existing.qty += item.qty;
+      if (!existing.img && item.img) existing.img = item.img;
     } else {
       merged.push({ ...item });
     }
