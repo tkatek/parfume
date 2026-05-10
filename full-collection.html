@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="index.css" />
   <link rel="stylesheet" href="collection.css" />
 </head>
 <body>
@@ -15,21 +14,21 @@
   <div class="cursor-dot" id="cursorDot"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- HEADER -->
+  <!-- ═══════════════ HEADER ═══════════════════════════════════ -->
   <header class="site-header" id="siteHeader">
     <div class="header-inner">
-      <a href="index.html" class="logo magnetic">LUMIÈRE</a>
-      <nav class="main-nav">
-        <a href="index.html#home" class="nav-link">Home</a>
-        <a href="index.html#shop" class="nav-link">Shop</a>
-        <a href="index.html#philosophy" class="nav-link">About</a>
-        <a href="index.html#contact" class="nav-link">Contact</a>
+      <button class="burger-btn" id="burgerBtn" aria-label="Open navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="index.html" class="logo">LUMIÈRE</a>
+      <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="fullcollection.html" class="nav-link nav-link--active">Shop</a>
+        <a href="#" class="nav-link">About</a>
+        <a href="#" class="nav-link">Contact</a>
       </nav>
       <div class="header-actions">
-        <button class="icon-btn magnetic" id="searchToggle" aria-label="Search">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        </button>
-        <button class="icon-btn cart-btn magnetic" id="cartToggle" aria-label="Cart">
+        <button class="icon-btn cart-btn" id="cartToggle" aria-label="Open cart">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
           <span class="cart-badge" id="cartBadge">0</span>
         </button>
@@ -37,335 +36,382 @@
     </div>
   </header>
 
-  <!-- Page Hero -->
-  <section class="coll-hero">
-    <div class="coll-hero-bg"></div>
-    <div class="coll-hero-content">
-      <p class="section-eyebrow">The Atelier</p>
-      <h1 class="coll-hero-title">The Full <em>Collection</em></h1>
-      <p class="coll-hero-sub">Forty-two distinct accords. One singular philosophy.</p>
+  <!-- Mobile sidebar nav -->
+  <div class="mob-overlay" id="mobOverlay" aria-hidden="true"></div>
+  <aside class="mob-sidebar" id="mobSidebar" aria-label="Mobile navigation" aria-hidden="true">
+    <div class="mob-sidebar-head">
+      <span class="mob-logo">LUMIÈRE</span>
+      <button class="mob-close" id="mobClose" aria-label="Close navigation">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="1" y1="1" x2="17" y2="17"/><line x1="17" y1="1" x2="1" y2="17"/></svg>
+      </button>
     </div>
-    <div class="coll-hero-scroll">
-      <div class="scroll-line"></div><span>Discover</span>
+    <nav class="mob-links">
+      <a href="index.html">Home</a>
+      <a href="fullcollection.html" class="active">Shop</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
+    <div class="mob-sidebar-footer">
+      <p>The art of fine fragrance.</p>
+    </div>
+  </aside>
+
+  <!-- ═══════════════ HERO BANNER ═══════════════════════════════ -->
+  <section class="coll-hero">
+    <div class="coll-hero-img" style="background-image:url('https://images.unsplash.com/photo-1541643600914-78b084683702?w=1800&q=85&auto=format&fit=crop')"></div>
+    <div class="coll-hero-veil"></div>
+    <div class="coll-hero-body">
+      <p class="hero-eyebrow">The Atelier</p>
+      <h1 class="hero-title">The Full <em>Collection</em></h1>
+      <p class="hero-sub">Explore the full collection — forty-two distinct accords, one singular philosophy.</p>
+    </div>
+    <div class="hero-scroll-cue">
+      <div class="hero-scroll-line"></div>
+      <span>Discover</span>
     </div>
   </section>
 
-  <!-- Main collection layout -->
+  <!-- ═══════════════ MAIN ═══════════════════════════════════════ -->
   <main class="coll-main">
 
-    <!-- Sidebar filters -->
-    <aside class="coll-sidebar">
-      <div class="sidebar-inner">
-        <div class="sidebar-section">
-          <h4 class="sidebar-title">Category</h4>
-          <label class="sidebar-check">
-            <input type="radio" name="cat" value="all" checked> All Fragrances
-          </label>
-          <label class="sidebar-check">
-            <input type="radio" name="cat" value="floral"> Floral
-          </label>
-          <label class="sidebar-check">
-            <input type="radio" name="cat" value="woody"> Woody
-          </label>
-          <label class="sidebar-check">
-            <input type="radio" name="cat" value="fresh"> Fresh
-          </label>
-          <label class="sidebar-check">
-            <input type="radio" name="cat" value="oriental"> Oriental
-          </label>
-        </div>
-        <div class="sidebar-section">
-          <h4 class="sidebar-title">Price Range</h4>
-          <label class="sidebar-check">
-            <input type="checkbox" value="under200" name="price"> Under $200
-          </label>
-          <label class="sidebar-check">
-            <input type="checkbox" value="200to250" name="price"> $200 – $250
-          </label>
-          <label class="sidebar-check">
-            <input type="checkbox" value="over250" name="price"> Over $250
-          </label>
-        </div>
-        <div class="sidebar-section">
-          <h4 class="sidebar-title">Concentration</h4>
-          <label class="sidebar-check">
-            <input type="checkbox" value="edp"> Eau de Parfum
-          </label>
-          <label class="sidebar-check">
-            <input type="checkbox" value="extrait"> Extrait de Parfum
-          </label>
-          <label class="sidebar-check">
-            <input type="checkbox" value="edt"> Eau de Toilette
-          </label>
-        </div>
-        <button class="sidebar-reset">Clear Filters</button>
-      </div>
-    </aside>
+    <!-- ── Horizontal filter ── -->
+    <div class="coll-filter-bar">
+      <nav class="filter-nav" role="tablist" aria-label="Filter fragrances by category">
+        <button class="filter-tab active" data-cat="all" role="tab" aria-selected="true">All</button>
+        <span class="filter-dot" aria-hidden="true">·</span>
+        <button class="filter-tab" data-cat="floral" role="tab" aria-selected="false">Floral</button>
+        <span class="filter-dot" aria-hidden="true">·</span>
+        <button class="filter-tab" data-cat="woody" role="tab" aria-selected="false">Woody</button>
+        <span class="filter-dot" aria-hidden="true">·</span>
+        <button class="filter-tab" data-cat="fresh" role="tab" aria-selected="false">Fresh</button>
+        <span class="filter-dot" aria-hidden="true">·</span>
+        <button class="filter-tab" data-cat="oriental" role="tab" aria-selected="false">Oriental</button>
+      </nav>
+      <div class="filter-track"><div class="filter-pill" id="filterPill"></div></div>
+    </div>
 
-    <!-- Collection grid -->
-    <div class="coll-content">
-      <div class="coll-toolbar">
-        <p class="coll-count"><span id="visibleCount">12</span> fragrances</p>
-        <div class="coll-sort">
-          <label>Sort by</label>
-          <select id="sortSelect" class="sort-select">
-            <option value="featured">Featured</option>
-            <option value="price-asc">Price: Low → High</option>
-            <option value="price-desc">Price: High → Low</option>
-            <option value="name">Name A–Z</option>
-          </select>
+    <!-- ── Toolbar ── -->
+    <div class="coll-toolbar">
+      <p class="coll-count"><span id="visibleCount">20</span> fragrances</p>
+      <div class="coll-sort">
+        <label for="sortSelect">Sort by</label>
+        <select id="sortSelect" class="sort-select">
+          <option value="featured">Featured</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+          <option value="name">Name A–Z</option>
+        </select>
+      </div>
+      <div class="view-toggle">
+        <button class="view-btn active" data-view="grid" aria-label="Grid view">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="0" width="6" height="6" rx="1"/><rect x="10" y="0" width="6" height="6" rx="1"/><rect x="0" y="10" width="6" height="6" rx="1"/><rect x="10" y="10" width="6" height="6" rx="1"/></svg>
+        </button>
+        <button class="view-btn" data-view="list" aria-label="List view">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="0" width="16" height="2" rx="1"/><rect x="0" y="7" width="16" height="2" rx="1"/><rect x="0" y="14" width="16" height="2" rx="1"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Grid – 20 products ── -->
+    <div class="coll-grid" id="collGrid">
+
+      <div class="coll-item" data-cat="floral" data-price="185" data-name="Rose Lumière"
+           data-img="https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&q=80&auto=format&fit=crop" alt="Rose Lumière" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Rose Lumière" data-price="185" data-img="https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+          <span class="coll-badge">Bestseller</span>
         </div>
-        <div class="view-toggle">
-          <button class="view-btn active" data-view="grid" aria-label="Grid view">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="0" width="6" height="6" rx="1"/><rect x="10" y="0" width="6" height="6" rx="1"/><rect x="0" y="10" width="6" height="6" rx="1"/><rect x="10" y="10" width="6" height="6" rx="1"/></svg>
-          </button>
-          <button class="view-btn" data-view="list" aria-label="List view">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="0" y="0" width="16" height="2" rx="1"/><rect x="0" y="7" width="16" height="2" rx="1"/><rect x="0" y="14" width="16" height="2" rx="1"/></svg>
-          </button>
+        <div class="coll-info">
+          <span class="coll-cat">Floral</span><h3>Rose Lumière</h3>
+          <p class="coll-notes">Bulgarian Rose · White Musk · Sandalwood</p>
+          <div class="coll-foot"><span class="coll-price">$185</span><span class="coll-conc">Eau de Parfum</span></div>
         </div>
       </div>
 
-      <div class="coll-grid" id="collGrid">
-
-        <div class="coll-item" data-cat="floral" data-price="185" data-name="Rose Lumière">
-          <div class="coll-item-img img-placeholder">
-            <div class="coll-item-actions">
-              <button class="btn-add-cart coll-quick" data-name="Rose Lumière" data-price="185">Quick Add</button>
-            </div>
-            <span class="coll-badge">Bestseller</span>
-          </div>
-          <div class="coll-item-info">
-            <span class="coll-cat-tag">Floral</span>
-            <h3>Rose Lumière</h3>
-            <p class="coll-notes">Bulgarian Rose · White Musk · Sandalwood</p>
-            <div class="coll-item-foot">
-              <span class="coll-price">$185</span>
-              <span class="coll-conc">Eau de Parfum</span>
-            </div>
-          </div>
+      <div class="coll-item" data-cat="woody" data-price="210" data-name="Cèdre Mystique"
+           data-img="https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=600&q=80&auto=format&fit=crop" alt="Cèdre Mystique" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Cèdre Mystique" data-price="210" data-img="https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
         </div>
-
-        <div class="coll-item" data-cat="woody" data-price="210" data-name="Cèdre Mystique">
-          <div class="coll-item-img img-placeholder">
-            <div class="coll-item-actions">
-              <button class="btn-add-cart coll-quick" data-name="Cèdre Mystique" data-price="210">Quick Add</button>
-            </div>
-          </div>
-          <div class="coll-item-info">
-            <span class="coll-cat-tag">Woody</span>
-            <h3>Cèdre Mystique</h3>
-            <p class="coll-notes">Cedarwood · Vetiver · Amber</p>
-            <div class="coll-item-foot">
-              <span class="coll-price">$210</span>
-              <span class="coll-conc">Extrait de Parfum</span>
-            </div>
-          </div>
+        <div class="coll-info">
+          <span class="coll-cat">Woody</span><h3>Cèdre Mystique</h3>
+          <p class="coll-notes">Cedarwood · Vetiver · Amber</p>
+          <div class="coll-foot"><span class="coll-price">$210</span><span class="coll-conc">Extrait de Parfum</span></div>
         </div>
-
-        <div class="coll-item" data-cat="fresh" data-price="165" data-name="Aube Fraîche">
-          <div class="coll-item-img img-placeholder">
-            <div class="coll-item-actions">
-              <button class="btn-add-cart coll-quick" data-name="Aube Fraîche" data-price="165">Quick Add</button>
-            </div>
-            <span class="coll-badge new">New</span>
-          </div>
-          <div class="coll-item-info">
-            <span class="coll-cat-tag">Fresh</span>
-            <h3>Aube Fraîche</h3>
-            <p class="coll-notes">Neroli · Sea Spray · Bergamot</p>
-            <div class="coll-item-foot">
-              <span class="coll-price">$165</span>
-              <span class="coll-conc">Eau de Toilette</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="coll-item" data-cat="oriental" data-price="240" data-name="Encens Doré">
-          <div class="coll-item-img img-placeholder">
-            <div class="coll-item-actions">
-              <button class="btn-add-cart coll-quick" data-name="Encens Doré" data-price="240">Quick Add</button>
-            </div>
-          </div>
-          <div class="coll-item-info">
-            <span class="coll-cat-tag">Oriental</span>
-            <h3>Encens Doré</h3>
-            <p class="coll-notes">Frankincense · Oud · Saffron</p>
-            <div class="coll-item-foot">
-              <span class="coll-price">$240</span>
-              <span class="coll-conc">Extrait de Parfum</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="coll-item" data-cat="floral" data-price="195" data-name="Jasmin Étoile">
-          <div class="coll-item-img img-placeholder">
-            <div class="coll-item-actions">
-              <button class="btn-add-cart coll-quick" data-name="Jasmin Étoile" data-price="195">Quick Add</button>
-            </div>
-          </div>
-          <div class="coll-item-info">
-            <span class="coll-cat-tag">Floral</span>
-            <h3>Jasmin Étoile</h3>
-            <p class="coll-notes">Jasmine · Ylang-Ylang · Vanilla</p>
-            <div class="coll-item-foot">
-              <span class="coll-price">$195</span>
-              <span class="coll-conc">Eau de Parfum</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="coll-item" data-cat="woody" data-price="225" data-name="Vétiver Royal">
-          <div class="coll-item-img img-placeholder">
-            <div class="coll-item-actions">
-              <button class="btn-add-cart coll-quick" data-name="Vétiver Royal" data-price="225">Quick Add</button>
-            </div>
-            <span class="coll-badge limited">Limited</span>
-          </div>
-          <div class="coll-item-info">
-            <span class="coll-cat-tag">Woody</span>
-            <h3>Vétiver Royal</h3>
-            <p class="coll-notes">Vetiver · Patchouli · Leather</p>
-            <div class="coll-item-foot">
-              <span class="coll-price">$225</span>
-              <span class="coll-conc">Extrait de Parfum</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="coll-item" data-cat="fresh" data-price="155" data-name="Menthe Glacée">
-          <div class="coll-item-img img-placeholder">
-            <div class="coll-item-actions">
-              <button class="btn-add-cart coll-quick" data-name="Menthe Glacée" data-price="155">Quick Add</button>
-            </div>
-          </div>
-          <div class="coll-item-info">
-            <span class="coll-cat-tag">Fresh</span>
-            <h3>Menthe Glacée</h3>
-            <p class="coll-notes">Mint · Eucalyptus · Aquatic Notes</p>
-            <div class="coll-item-foot">
-              <span class="coll-price">$155</span>
-              <span class="coll-conc">Eau de Toilette</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="coll-item" data-cat="oriental" data-price="260" data-name="Ambre Nocturne">
-          <div class="coll-item-img img-placeholder">
-            <div class="coll-item-actions">
-              <button class="btn-add-cart coll-quick" data-name="Ambre Nocturne" data-price="260">Quick Add</button>
-            </div>
-          </div>
-          <div class="coll-item-info">
-            <span class="coll-cat-tag">Oriental</span>
-            <h3>Ambre Nocturne</h3>
-            <p class="coll-notes">Amber · Oud · Dark Rose</p>
-            <div class="coll-item-foot">
-              <span class="coll-price">$260</span>
-              <span class="coll-conc">Extrait de Parfum</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="coll-item" data-cat="floral" data-price="175" data-name="Pivoine Blanche">
-          <div class="coll-item-img img-placeholder">
-            <div class="coll-item-actions">
-              <button class="btn-add-cart coll-quick" data-name="Pivoine Blanche" data-price="175">Quick Add</button>
-            </div>
-          </div>
-          <div class="coll-item-info">
-            <span class="coll-cat-tag">Floral</span>
-            <h3>Pivoine Blanche</h3>
-            <p class="coll-notes">White Peony · Iris · Orris Root</p>
-            <div class="coll-item-foot">
-              <span class="coll-price">$175</span>
-              <span class="coll-conc">Eau de Parfum</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="coll-item" data-cat="woody" data-price="200" data-name="Oud Sombre">
-          <div class="coll-item-img img-placeholder">
-            <div class="coll-item-actions">
-              <button class="btn-add-cart coll-quick" data-name="Oud Sombre" data-price="200">Quick Add</button>
-            </div>
-          </div>
-          <div class="coll-item-info">
-            <span class="coll-cat-tag">Woody</span>
-            <h3>Oud Sombre</h3>
-            <p class="coll-notes">Cambodian Oud · Incense · Myrrh</p>
-            <div class="coll-item-foot">
-              <span class="coll-price">$200</span>
-              <span class="coll-conc">Extrait de Parfum</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="coll-item" data-cat="oriental" data-price="220" data-name="Safran Royal">
-          <div class="coll-item-img img-placeholder">
-            <div class="coll-item-actions">
-              <button class="btn-add-cart coll-quick" data-name="Safran Royal" data-price="220">Quick Add</button>
-            </div>
-          </div>
-          <div class="coll-item-info">
-            <span class="coll-cat-tag">Oriental</span>
-            <h3>Safran Royal</h3>
-            <p class="coll-notes">Saffron · Rose · Sandalwood</p>
-            <div class="coll-item-foot">
-              <span class="coll-price">$220</span>
-              <span class="coll-conc">Extrait de Parfum</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="coll-item" data-cat="fresh" data-price="145" data-name="Citrus Élite">
-          <div class="coll-item-img img-placeholder">
-            <div class="coll-item-actions">
-              <button class="btn-add-cart coll-quick" data-name="Citrus Élite" data-price="145">Quick Add</button>
-            </div>
-          </div>
-          <div class="coll-item-info">
-            <span class="coll-cat-tag">Fresh</span>
-            <h3>Citrus Élite</h3>
-            <p class="coll-notes">Amalfi Lemon · Grapefruit · Cedar</p>
-            <div class="coll-item-foot">
-              <span class="coll-price">$145</span>
-              <span class="coll-conc">Eau de Toilette</span>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /coll-grid -->
-
-      <!-- Pagination -->
-      <div class="coll-pagination">
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn page-next">Next →</button>
       </div>
 
-    </div><!-- /coll-content -->
+      <div class="coll-item" data-cat="fresh" data-price="165" data-name="Aube Fraîche"
+           data-img="https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600&q=80&auto=format&fit=crop" alt="Aube Fraîche" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Aube Fraîche" data-price="165" data-img="https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+          <span class="coll-badge coll-badge--new">New</span>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Fresh</span><h3>Aube Fraîche</h3>
+          <p class="coll-notes">Neroli · Sea Spray · Bergamot</p>
+          <div class="coll-foot"><span class="coll-price">$165</span><span class="coll-conc">Eau de Toilette</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="oriental" data-price="240" data-name="Encens Doré"
+           data-img="https://images.unsplash.com/photo-1600612253971-61f5a9b6e0c7?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1600612253971-61f5a9b6e0c7?w=600&q=80&auto=format&fit=crop" alt="Encens Doré" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Encens Doré" data-price="240" data-img="https://images.unsplash.com/photo-1600612253971-61f5a9b6e0c7?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Oriental</span><h3>Encens Doré</h3>
+          <p class="coll-notes">Frankincense · Oud · Saffron</p>
+          <div class="coll-foot"><span class="coll-price">$240</span><span class="coll-conc">Extrait de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="floral" data-price="195" data-name="Jasmin Étoile"
+           data-img="https://images.unsplash.com/photo-1590156562745-5b2e8b1e5e72?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1590156562745-5b2e8b1e5e72?w=600&q=80&auto=format&fit=crop" alt="Jasmin Étoile" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Jasmin Étoile" data-price="195" data-img="https://images.unsplash.com/photo-1590156562745-5b2e8b1e5e72?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Floral</span><h3>Jasmin Étoile</h3>
+          <p class="coll-notes">Jasmine · Ylang-Ylang · Vanilla</p>
+          <div class="coll-foot"><span class="coll-price">$195</span><span class="coll-conc">Eau de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="woody" data-price="225" data-name="Vétiver Royal"
+           data-img="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=600&q=80&auto=format&fit=crop" alt="Vétiver Royal" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Vétiver Royal" data-price="225" data-img="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+          <span class="coll-badge coll-badge--limited">Limited</span>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Woody</span><h3>Vétiver Royal</h3>
+          <p class="coll-notes">Vetiver · Patchouli · Leather</p>
+          <div class="coll-foot"><span class="coll-price">$225</span><span class="coll-conc">Extrait de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="fresh" data-price="155" data-name="Menthe Glacée"
+           data-img="https://images.unsplash.com/photo-1617897903246-719242758050?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1617897903246-719242758050?w=600&q=80&auto=format&fit=crop" alt="Menthe Glacée" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Menthe Glacée" data-price="155" data-img="https://images.unsplash.com/photo-1617897903246-719242758050?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Fresh</span><h3>Menthe Glacée</h3>
+          <p class="coll-notes">Mint · Eucalyptus · Aquatic Notes</p>
+          <div class="coll-foot"><span class="coll-price">$155</span><span class="coll-conc">Eau de Toilette</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="oriental" data-price="260" data-name="Ambre Nocturne"
+           data-img="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=600&q=80&auto=format&fit=crop" alt="Ambre Nocturne" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Ambre Nocturne" data-price="260" data-img="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Oriental</span><h3>Ambre Nocturne</h3>
+          <p class="coll-notes">Amber · Oud · Dark Rose</p>
+          <div class="coll-foot"><span class="coll-price">$260</span><span class="coll-conc">Extrait de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="floral" data-price="175" data-name="Pivoine Blanche"
+           data-img="https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=600&q=80&auto=format&fit=crop" alt="Pivoine Blanche" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Pivoine Blanche" data-price="175" data-img="https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Floral</span><h3>Pivoine Blanche</h3>
+          <p class="coll-notes">White Peony · Iris · Orris Root</p>
+          <div class="coll-foot"><span class="coll-price">$175</span><span class="coll-conc">Eau de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="woody" data-price="200" data-name="Oud Sombre"
+           data-img="https://images.unsplash.com/photo-1547887538-047f814543c0?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1547887538-047f814543c0?w=600&q=80&auto=format&fit=crop" alt="Oud Sombre" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Oud Sombre" data-price="200" data-img="https://images.unsplash.com/photo-1547887538-047f814543c0?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Woody</span><h3>Oud Sombre</h3>
+          <p class="coll-notes">Cambodian Oud · Incense · Myrrh</p>
+          <div class="coll-foot"><span class="coll-price">$200</span><span class="coll-conc">Extrait de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="oriental" data-price="220" data-name="Safran Royal"
+           data-img="https://images.unsplash.com/photo-1624454002302-36b824d7bd0a?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1624454002302-36b824d7bd0a?w=600&q=80&auto=format&fit=crop" alt="Safran Royal" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Safran Royal" data-price="220" data-img="https://images.unsplash.com/photo-1624454002302-36b824d7bd0a?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Oriental</span><h3>Safran Royal</h3>
+          <p class="coll-notes">Saffron · Rose · Sandalwood</p>
+          <div class="coll-foot"><span class="coll-price">$220</span><span class="coll-conc">Extrait de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="fresh" data-price="145" data-name="Citrus Élite"
+           data-img="https://images.unsplash.com/photo-1619994403073-2cec844b8e63?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1619994403073-2cec844b8e63?w=600&q=80&auto=format&fit=crop" alt="Citrus Élite" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Citrus Élite" data-price="145" data-img="https://images.unsplash.com/photo-1619994403073-2cec844b8e63?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Fresh</span><h3>Citrus Élite</h3>
+          <p class="coll-notes">Amalfi Lemon · Grapefruit · Cedar</p>
+          <div class="coll-foot"><span class="coll-price">$145</span><span class="coll-conc">Eau de Toilette</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="floral" data-price="215" data-name="Iris Céleste"
+           data-img="https://images.unsplash.com/photo-1608528577891-eb055944f2e7?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1608528577891-eb055944f2e7?w=600&q=80&auto=format&fit=crop" alt="Iris Céleste" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Iris Céleste" data-price="215" data-img="https://images.unsplash.com/photo-1608528577891-eb055944f2e7?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Floral</span><h3>Iris Céleste</h3>
+          <p class="coll-notes">Iris · Violet Leaf · White Musk</p>
+          <div class="coll-foot"><span class="coll-price">$215</span><span class="coll-conc">Eau de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="woody" data-price="245" data-name="Bois Sacré"
+           data-img="https://images.unsplash.com/photo-1612968636774-d1e96f60d002?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1612968636774-d1e96f60d002?w=600&q=80&auto=format&fit=crop" alt="Bois Sacré" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Bois Sacré" data-price="245" data-img="https://images.unsplash.com/photo-1612968636774-d1e96f60d002?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+          <span class="coll-badge coll-badge--limited">Limited</span>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Woody</span><h3>Bois Sacré</h3>
+          <p class="coll-notes">Sandalwood · Guaiac Wood · Benzoin</p>
+          <div class="coll-foot"><span class="coll-price">$245</span><span class="coll-conc">Extrait de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="oriental" data-price="280" data-name="Nuit de Sable"
+           data-img="https://images.unsplash.com/photo-1588514912908-9f7b96fba5e8?w=600&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1588514912908-9f7b96fba5e8?w=600&q=80&auto=format&fit=crop" alt="Nuit de Sable" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Nuit de Sable" data-price="280" data-img="https://images.unsplash.com/photo-1588514912908-9f7b96fba5e8?w=600&q=80&auto=format&fit=crop">Quick Add</button></div>
+          <span class="coll-badge coll-badge--new">New</span>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Oriental</span><h3>Nuit de Sable</h3>
+          <p class="coll-notes">Oud · Benzoin · Warm Amber</p>
+          <div class="coll-foot"><span class="coll-price">$280</span><span class="coll-conc">Extrait de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="fresh" data-price="170" data-name="Vague Blanche"
+           data-img="https://images.unsplash.com/photo-1541643600914-78b084683702?w=601&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1541643600914-78b084683702?w=601&q=80&auto=format&fit=crop" alt="Vague Blanche" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Vague Blanche" data-price="170" data-img="https://images.unsplash.com/photo-1541643600914-78b084683702?w=601&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Fresh</span><h3>Vague Blanche</h3>
+          <p class="coll-notes">Sea Salt · White Tea · Driftwood</p>
+          <div class="coll-foot"><span class="coll-price">$170</span><span class="coll-conc">Eau de Toilette</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="floral" data-price="190" data-name="Muguet Doré"
+           data-img="https://images.unsplash.com/photo-1594035910387-fea47794261f?w=601&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?w=601&q=80&auto=format&fit=crop" alt="Muguet Doré" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Muguet Doré" data-price="190" data-img="https://images.unsplash.com/photo-1594035910387-fea47794261f?w=601&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Floral</span><h3>Muguet Doré</h3>
+          <p class="coll-notes">Lily of the Valley · Aldehydes · Cedar</p>
+          <div class="coll-foot"><span class="coll-price">$190</span><span class="coll-conc">Eau de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="woody" data-price="235" data-name="Tabac Noir"
+           data-img="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=601&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=601&q=80&auto=format&fit=crop" alt="Tabac Noir" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Tabac Noir" data-price="235" data-img="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=601&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Woody</span><h3>Tabac Noir</h3>
+          <p class="coll-notes">Tobacco · Black Pepper · Oakmoss</p>
+          <div class="coll-foot"><span class="coll-price">$235</span><span class="coll-conc">Extrait de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="oriental" data-price="255" data-name="Rose de Minuit"
+           data-img="https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=601&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=601&q=80&auto=format&fit=crop" alt="Rose de Minuit" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Rose de Minuit" data-price="255" data-img="https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=601&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Oriental</span><h3>Rose de Minuit</h3>
+          <p class="coll-notes">Turkish Rose · Dark Oud · Vanilla</p>
+          <div class="coll-foot"><span class="coll-price">$255</span><span class="coll-conc">Extrait de Parfum</span></div>
+        </div>
+      </div>
+
+      <div class="coll-item" data-cat="fresh" data-price="160" data-name="Thé Impérial"
+           data-img="https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=601&q=80&auto=format&fit=crop">
+        <div class="coll-item-img">
+          <img src="https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=601&q=80&auto=format&fit=crop" alt="Thé Impérial" loading="lazy">
+          <div class="coll-overlay"><button class="coll-quick" data-name="Thé Impérial" data-price="160" data-img="https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=601&q=80&auto=format&fit=crop">Quick Add</button></div>
+        </div>
+        <div class="coll-info">
+          <span class="coll-cat">Fresh</span><h3>Thé Impérial</h3>
+          <p class="coll-notes">Green Tea · Jasmine · White Musk</p>
+          <div class="coll-foot"><span class="coll-price">$160</span><span class="coll-conc">Eau de Parfum</span></div>
+        </div>
+      </div>
+
+    </div><!-- /coll-grid -->
+
+    <p class="coll-empty" id="collEmpty">No fragrances found in this category.</p>
+
   </main>
 
-  <!-- Cart Drawer (same as index) -->
+  <!-- ═══════════════ CART DRAWER ═══════════════════════════════ -->
   <div class="cart-overlay" id="cartOverlay"></div>
-  <aside class="cart-drawer" id="cartDrawer">
-    <div class="cart-header">
-      <h3>Your Selection</h3>
-      <button class="cart-close magnetic" id="cartClose">✕</button>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+    <div class="cart-hd">
+      <div class="cart-hd-title">
+        <h3>Your Selection</h3>
+        <span class="cart-hd-count" id="cartHdCount">0</span>
+      </div>
+      <button class="cart-close-btn" id="cartClose" aria-label="Close cart">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="1" y1="1" x2="15" y2="15"/><line x1="15" y1="1" x2="1" y2="15"/></svg>
+      </button>
     </div>
-    <div class="cart-items" id="cartItems">
-      <div class="cart-empty" id="cartEmpty">
+
+    <div class="cart-body" id="cartBody">
+      <div class="cart-empty-state" id="cartEmptyState">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <p>Your cart is empty.</p>
         <span>Begin your olfactory journey.</span>
       </div>
     </div>
-    <div class="cart-footer" id="cartFooter" style="display:none;">
-      <div class="cart-total">
-        <span>Total</span>
-        <span id="cartTotal">$0</span>
+
+    <div class="cart-ft" id="cartFt">
+      <div class="cart-total-row">
+        <span>Total</span><span id="cartTotal">$0</span>
       </div>
-      <a href="cart.html" class="btn-checkout magnetic">Proceed to Checkout</a>
+      <a href="cart.html" class="btn-checkout">Proceed to Checkout</a>
     </div>
   </aside>
 

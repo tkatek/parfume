@@ -314,14 +314,18 @@ function initCart() {
     const name  = btn.dataset.name;
     const price = parseFloat(btn.dataset.price);
     if (!name || isNaN(price)) return;
-    addItem(name, price);
+    const image = btn.dataset.img || btn.closest('article, .sg-card')?.querySelector('img')?.src || '';
+    addItem(name, price, image);
     showToast(`${name} added to cart ✦`);
   });
 
-  function addItem(name, price) {
+  function addItem(name, price, image) {
     const ex = cart.find(i => i.name === name);
-    if (ex) ex.qty++;
-    else cart.push({ id: Date.now(), name, price, qty: 1 });
+    if (ex) {
+      ex.qty++;
+    } else {
+      cart.push({ id: Date.now(), name, price, qty: 1, image });
+    }
     save(); render(); updateBadge();
   }
 
@@ -377,7 +381,7 @@ function initCart() {
     el.className  = 'cd-item';
     el.dataset.id = item.id;
     el.innerHTML = `
-      <div class="cd-item-img"></div>
+      <div class="cd-item-img">${item.image ? `<img src="${item.image}" alt="${item.name}" />` : ''}</div>
       <div>
         <p class="cd-item-name">${item.name}</p>
         <p class="cd-item-price">$${item.price}</p>
