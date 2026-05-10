@@ -270,6 +270,11 @@ function initCart() {
   let cart = [];
   try { cart = JSON.parse(localStorage.getItem('lumiere_cart') || '[]'); } catch(e) {}
 
+  cart = cart.map(item => ({
+    ...item,
+    image: item.image || item.img || ''
+  }));
+
   /* ── DOM ── */
   const drawer    = document.getElementById('cartDrawer');
   const overlay   = document.getElementById('cartOverlay');
@@ -380,8 +385,9 @@ function initCart() {
     const el = document.createElement('div');
     el.className  = 'cd-item';
     el.dataset.id = item.id;
+    const imageSrc = item.image || item.img || '';
     el.innerHTML = `
-      <div class="cd-item-img">${item.image ? `<img src="${item.image}" alt="${item.name}" />` : ''}</div>
+      <div class="cd-item-img">${imageSrc ? `<img src="${imageSrc}" alt="${item.name}" />` : ''}</div>
       <div>
         <p class="cd-item-name">${item.name}</p>
         <p class="cd-item-price">$${item.price}</p>

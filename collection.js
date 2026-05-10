@@ -316,7 +316,7 @@
       });
 
       // Total
-      const total = cart.reduce((s, i) => s + i.price, 0);
+      const total = cart.reduce((s, i) => s + i.price * (i.qty || 1), 0);
       if (cartTotal) cartTotal.textContent = '$' + total;
     }
   }
